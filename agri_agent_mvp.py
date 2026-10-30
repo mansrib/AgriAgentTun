@@ -103,6 +103,8 @@ KB_FILE_PATH = os.path.join(BASE_DIR, "tunisian_agri_knowledge_base.json")
 MEDIA_DIR_PATH = os.path.join(BASE_DIR, "tmp_media")
 os.makedirs(MEDIA_DIR_PATH, exist_ok=True)
 
+PUBLIC_SITE_URL = os.environ.get("RENDER_EXTERNAL_URL", "https://agriagenttun.onrender.com").rstrip("/")
+
 
 def ensure_free_hosting_files_created() -> None:
     """ينشئ تلقائياً ملفات الاستضافة السحابية المجانية (requirements.txt, Procfile, Dockerfile)."""
@@ -1709,19 +1711,309 @@ def configure_and_check_green_api(green_id: str, green_token: str) -> Dict[str, 
             if r_state.status_code == 200:
                 state_data = r_state.json()
                 state_str = state_data.get("stateInstance", "unknown")
+
+                # تفعيل استقبال الإشعارات والرسائل الواردة على Green-API
+                settings_url = f"{base_url}/waInstance{green_id}/setSettings/{green_token}"
+                settings_payload = {
+                    "webhookUrl": "",
+                    "outgoingWebhook": "no",
+                    "stateWebhook": "no",
+                    "incomingWebhook": "yes",
+                    "outgoingMessageWebhook": "yes",
+                    "outgoingAPIMessageWebhook": "no",
+                    "markIncomingMessagesReaded": "yes",
+                    "keepOnlineStatus": "yes"
+                }
+                try:
+                    requests.post(settings_url, json=settings_payload, timeout=6)
+                except Exception:
+                    pass
+
                 if state_str == "authorized":
-                    msg = f"✅ مربوط بنجاح (authorized) على Instance {green_id}!"
+                    msg = f"✅ مربوط بنجاح (authorized) وتم تفعيل استقبال رسائل الواتساب على Instance {green_id}!"
                     LAST_BOT_STATUS["state"] = "authorized"
                     LAST_BOT_STATUS["detail_ar"] = msg
                     return {"ok": True, "state": state_str, "base_url": base_url, "note_ar": msg}
                 else:
-                    msg = f"⚠️ حالة الحساب في Green-API: {state_str}"
+                    msg = f"⚠️ حالة الحساب في Green-API: {state_str} — امسح QR Code في green-api.com"
                     LAST_BOT_STATUS["state"] = state_str
                     LAST_BOT_STATUS["detail_ar"] = msg
                     return {"ok": False, "state": state_str, "base_url": base_url, "note_ar": msg}
         except Exception:
             continue
     return {"ok": False, "state": "invalid_credentials", "note_ar": "⚠️ تأكد من صحة idInstance و apiTokenInstance."}
+
+
+def _extract_text_from_green_message(msg_data: Dict[str, Any]) -> str:
+    if not isinstance(msg_data, dict):
+        return ""
+    if "textMessageData" in msg_data and isinstance(msg_data["textMessageData"], dict):
+        txt = str(msg_data["textMessageData"].get("textMessage", "")).strip()
+        if txt:
+            return txt
+    if "extendedTextMessageData" in msg_data and isinstance(msg_data["extendedTextMessageData"], dict):
+        txt = str(msg_data["extendedTextMessageData"].get("text", "")).strip()
+        if txt:
+            return txt
+    if "quotedMessage" in msg_data and isinstance(msg_data["quotedMessage"], dict):
+        txt = str(msg_data.get("extendedTextMessageData", {}).get("text", "") or msg_data.get("textMessageData", {}).get("textMessage", "")).strip()
+        if txt:
+            return txt
+    for btn_key in ("buttonsResponseMessage", "templateButtonReplyMessage", "listResponseMessage"):
+        if btn_key in msg_data and isinstance(msg_data[btn_key], dict):
+            b_obj = msg_data[btn_key]
+            txt = str(b_obj.get("selectedButtonText") or b_obj.get("selectedDisplayText") or b_obj.get("title") or "").strip()
+            if txt:
+                return txt
+    if "locationMessageData" in msg_data and isinstance(msg_data["locationMessageData"], dict):
+        loc_d = msg_data["locationMessageData"]
+        lat_v = loc_d.get("latitude")
+        lon_v = loc_d.get("longitude")
+        name_loc = str(loc_d.get("nameLocation") or loc_d.get("address") or "").strip()
+        if lat_v is not None and lon_v is not None:
+            near_loc, near_reg = nearest_tunisian_locality_from_gps(float(lat_v), float(lon_v))
+            return f"📍 موقع GPS للضيعة: {lat_v}, {lon_v} ({name_loc or near_loc} - {near_reg})"
+    return ""
+
+
+def _extract_gps_from_green_message(msg_data: Dict[str, Any]) -> Tuple[Optional[float], Optional[float]]:
+    if isinstance(msg_data, dict) and "locationMessageData" in msg_data and isinstance(msg_data["locationMessageData"], dict):
+        loc_d = msg_data["locationMessageData"]
+        try:
+            return float(loc_d["latitude"]), float(loc_d["longitude"])
+        except Exception:
+            pass
+    return None, None
+
+
+def download_green_api_media(
+    base_url: str,
+    green_id: str,
+    green_token: str,
+    chat_id: str,
+    id_message: str,
+    msg_data: Dict[str, Any]
+) -> Tuple[Optional[str], Optional[str], str, str, bool]:
+    msg_type = str(msg_data.get("typeMessage", ""))
+    file_data = (
+        msg_data.get("fileMessageData")
+        or msg_data.get("imageMessageData")
+        or msg_data.get("audioMessageData")
+        or msg_data.get("voiceMessageData")
+        or msg_data.get("documentMessageData")
+        or {}
+    )
+    if not isinstance(file_data, dict):
+        file_data = {}
+
+    download_url = str(file_data.get("downloadUrl", "")).strip()
+    caption = str(file_data.get("caption", "")).strip()
+    mime_type = str(file_data.get("mimeType", "")).strip().split(";")[0].strip()
+    jpeg_thumb_b64 = str(file_data.get("jpegThumbnail", "")).strip()
+
+    is_image = (
+        msg_type in ("imageMessage", "stickerMessage")
+        or mime_type.startswith("image/")
+        or bool(jpeg_thumb_b64 and msg_type != "videoMessage")
+    )
+    is_audio = (
+        msg_type in ("audioMessage", "voiceMessage", "ptt")
+        or mime_type.startswith("audio/")
+    )
+
+    if not (is_image or is_audio):
+        return None, None, "", "", False
+
+    if not download_url:
+        for media_host in get_green_api_media_urls(green_id):
+            try:
+                dl_endpoint = f"{media_host}/waInstance{green_id}/downloadFile/{green_token}"
+                dl_resp = requests.post(dl_endpoint, json={"chatId": chat_id, "idMessage": id_message}, timeout=10)
+                if dl_resp.status_code == 200 and dl_resp.text:
+                    dl_json = dl_resp.json()
+                    candidate_url = str(dl_json.get("downloadUrl", "")).strip()
+                    if candidate_url:
+                        download_url = candidate_url
+                        break
+            except Exception:
+                continue
+
+    if download_url:
+        try:
+            media_resp = requests.get(download_url, timeout=15)
+            if media_resp.status_code == 200 and len(media_resp.content) > 0:
+                if is_image:
+                    ext = "png" if "png" in mime_type else "jpg"
+                    local_img = os.path.join(MEDIA_DIR_PATH, f"wa_img_{uuid.uuid4().hex[:8]}.{ext}")
+                    with open(local_img, "wb") as f:
+                        f.write(media_resp.content)
+                    label = f"📸 صورة مرفقة{(' - ' + caption) if caption else ''}"
+                    return local_img, None, (mime_type or "image/jpeg"), label, True
+                if is_audio:
+                    ext = "mp3" if "mp3" in mime_type or "mpeg" in mime_type else "ogg"
+                    local_aud = os.path.join(MEDIA_DIR_PATH, f"wa_voice_{uuid.uuid4().hex[:8]}.{ext}")
+                    with open(local_aud, "wb") as f:
+                        f.write(media_resp.content)
+                    label = "🎙️ تسجيل صوتي بالدارجة التونسية"
+                    return None, local_aud, (mime_type or "audio/ogg"), label, True
+        except Exception:
+            pass
+
+    if is_image and jpeg_thumb_b64:
+        try:
+            if "," in jpeg_thumb_b64:
+                jpeg_thumb_b64 = jpeg_thumb_b64.split(",", 1)[1]
+            thumb_bytes = base64.b64decode(jpeg_thumb_b64)
+            if len(thumb_bytes) > 0:
+                local_img = os.path.join(MEDIA_DIR_PATH, f"wa_thumb_{uuid.uuid4().hex[:8]}.jpg")
+                with open(local_img, "wb") as f:
+                    f.write(thumb_bytes)
+                label = f"📸 صورة مرفقة{(' - ' + caption) if caption else ''}"
+                return local_img, None, "image/jpeg", label, True
+        except Exception:
+            pass
+
+    if is_image:
+        return None, None, "image/jpeg", f"📸 صورة مرفقة{(' - ' + caption) if caption else ''}", True
+    return None, None, "audio/ogg", "🎙️ تسجيل صوتي بالدارجة التونسية", True
+
+
+def handle_green_api_notification_body(
+    body: Dict[str, Any],
+    base_url: str = "https://api.green-api.com",
+    green_id: str = "",
+    green_token: str = ""
+) -> Optional[Dict[str, Any]]:
+    """يعالج إشعار رسالة واتساب واردة من Green-API سواء عبر السحب الآلي أو عبر Webhook."""
+    if not isinstance(body, dict):
+        return None
+    cfg = load_saved_config()
+    office_sig = cfg.get("BOT_OFFICE_NAME") or DEFAULT_BOT_SIGNATURE
+    type_webhook = body.get("typeWebhook", "")
+    id_message = str(body.get("idMessage", uuid.uuid4().hex[:8]))
+
+    if type_webhook not in ("incomingMessageReceived", "outgoingMessageReceived"):
+        return None
+
+    sender_data = body.get("senderData", {})
+    chat_id = str(sender_data.get("chatId", ""))
+    sender_name = sender_data.get("senderName") or sender_data.get("chatName") or "فلاح (واتساب)"
+    sender_phone = chat_id.replace("@c.us", "")
+    msg_data = body.get("messageData", {})
+
+    text_msg = _extract_text_from_green_message(msg_data)
+    gps_lat_val, gps_lon_val = _extract_gps_from_green_message(msg_data)
+
+    img_path, aud_path, media_mime, media_label, is_media = (None, None, "", "", False)
+    if green_id and green_token:
+        img_path, aud_path, media_mime, media_label, is_media = download_green_api_media(
+            base_url=base_url,
+            green_id=green_id,
+            green_token=green_token,
+            chat_id=chat_id,
+            id_message=id_message,
+            msg_data=msg_data
+        )
+    if media_label and not text_msg:
+        text_msg = media_label
+
+    is_bot_own_reply = (
+        id_message in SENT_BY_BOT_MESSAGE_IDS
+        or text_msg.startswith("🤖")
+        or text_msg.startswith("🎙️ *سؤالك الصوتي:*")
+        or office_sig in text_msg
+        or "• **المرض متاعك:**" in text_msg
+        or "• **أعمل هذي:**" in text_msg
+        or "• **اشري هذي واستعملها" in text_msg
+    )
+
+    if (text_msg or is_media) and not is_bot_own_reply and not chat_id.endswith("@g.us") and id_message not in PROCESSED_MESSAGE_IDS:
+        PROCESSED_MESSAGE_IDS.add(id_message)
+        log_bot_event(f"📩 [وصلت رسالة واتساب] من {sender_name} (+{sender_phone}): {text_msg}")
+        plot = REGISTERED_FARMERS_DB["DEFAULT"].copy()
+        plot.farmer_name = sender_name
+        plot.phone_or_chat_id = f"+{sender_phone}"
+        q = FarmerQuery(
+            plot=plot,
+            message_text=text_msg,
+            image_path=img_path,
+            image_mime=media_mime if img_path else "image/jpeg",
+            audio_path=aud_path,
+            audio_mime=media_mime if aud_path else "audio/ogg",
+            is_media_message=is_media,
+            media_type_label=media_label,
+            gps_lat=gps_lat_val,
+            gps_lon=gps_lon_val
+        )
+        return process_incoming_farmer_message(q, send_on_whatsapp=True)
+    return None
+
+
+def poll_green_api_once() -> Dict[str, Any]:
+    """يسحب الرسائل المنتظرة من Green-API دفعة واحدة (تُستدعى تلقائياً في الخلفية وعند ضغط زر الفحص)."""
+    cfg = load_saved_config()
+    green_id = (os.environ.get("GREEN_API_INSTANCE_ID") or cfg.get("GREEN_API_INSTANCE_ID") or "").strip()
+    green_token = (os.environ.get("GREEN_API_TOKEN") or cfg.get("GREEN_API_TOKEN") or "").strip()
+
+    if not green_id or not green_token:
+        LAST_BOT_STATUS["state"] = "missing_keys"
+        LAST_BOT_STATUS["detail_ar"] = "⚠️ أدخل idInstance و apiTokenInstance في قسم الاستشارات لتفعيل استقبال الواتساب على السيرفر."
+        return {"ok": False, "pulled": 0, "note_ar": LAST_BOT_STATUS["detail_ar"]}
+
+    pulled_count = 0
+    for base_url in get_green_api_base_urls(green_id):
+        recv_url = f"{base_url}/waInstance{green_id}/receiveNotification/{green_token}"
+        drained = 0
+        working_host = False
+        while drained < 15:
+            try:
+                resp = requests.get(recv_url, timeout=8)
+                if resp.status_code != 200:
+                    break
+                working_host = True
+                LAST_BOT_STATUS["last_check"] = datetime.now().strftime("%H:%M:%S")
+                if not resp.text or resp.text.strip() == "null":
+                    break
+                notif = resp.json()
+                if not notif or "receiptId" not in notif:
+                    break
+                drained += 1
+                receipt_id = notif["receiptId"]
+                body = notif.get("body", {})
+                out = handle_green_api_notification_body(body, base_url=base_url, green_id=green_id, green_token=green_token)
+                if out:
+                    pulled_count += 1
+                del_url = f"{base_url}/waInstance{green_id}/deleteNotification/{green_token}/{receipt_id}"
+                requests.delete(del_url, timeout=5)
+            except Exception:
+                break
+        if working_host:
+            break
+
+    return {
+        "ok": True,
+        "pulled": pulled_count,
+        "note_ar": f"✅ تم فحص الواتساب بنجاح (تم سحب {pulled_count} رسائل جديدة)" if pulled_count > 0 else "✅ الاتصال بـ Green-API نشط (لا توجد رسائل جديدة في الانتظار)"
+    }
+
+
+def _green_api_polling_worker() -> None:
+    """خيط خلفي مستمر لسحب رسائل الواتساب من Green-API كل ثانيتين على السيرفر السحابي أو المحلي."""
+    settings_initialized_for = ""
+    while True:
+        try:
+            cfg = load_saved_config()
+            green_id = (os.environ.get("GREEN_API_INSTANCE_ID") or cfg.get("GREEN_API_INSTANCE_ID") or "").strip()
+            green_token = (os.environ.get("GREEN_API_TOKEN") or cfg.get("GREEN_API_TOKEN") or "").strip()
+            if green_id and green_token:
+                sig = f"{green_id}:{green_token}"
+                if settings_initialized_for != sig:
+                    configure_and_check_green_api(green_id, green_token)
+                    settings_initialized_for = sig
+                poll_green_api_once()
+        except Exception as e:
+            LAST_BOT_STATUS["detail_ar"] = f"⚠️ خطأ أثناء فحص الرسائل: {e}"
+        time.sleep(2.0)
 
 
 def normalize_phone_number(raw_phone: str) -> str:
@@ -1943,7 +2235,31 @@ app.add_middleware(
 @app.on_event("startup")
 def on_server_startup():
     save_config_key("GEMINI_API_KEY", get_active_gemini_key())
-    log_bot_event("🚀 بدأ تشغيل سيرفر الهندسة الفلاحية (صفحة المهندس + بوابة الفلاح + الوكيل الذكي)")
+    log_bot_event(f"🚀 بدأ تشغيل سيرفر الهندسة الفلاحية ({PUBLIC_SITE_URL}) + تفعيل ساحب رسائل الواتساب الخلفي")
+    t = threading.Thread(target=_green_api_polling_worker, daemon=True)
+    t.start()
+
+
+@app.post("/api/poll-whatsapp-now")
+def api_poll_whatsapp_now():
+    """يتيح للمهندس سحب رسائل الواتساب يدوياً في أي لحظة وفحص حالة Green-API."""
+    return poll_green_api_once()
+
+
+@app.post("/webhook/green-api")
+@app.post("/webhook/whatsapp")
+async def green_api_webhook_receiver(request: Request):
+    """يستقبل رسائل الواتساب فوراً إذا تم ضبط Webhook URL في Green-API على https://agriagenttun.onrender.com/webhook/green-api"""
+    try:
+        payload = await request.json()
+        cfg = load_saved_config()
+        green_id = (os.environ.get("GREEN_API_INSTANCE_ID") or cfg.get("GREEN_API_INSTANCE_ID") or "").strip()
+        green_token = (os.environ.get("GREEN_API_TOKEN") or cfg.get("GREEN_API_TOKEN") or "").strip()
+        body = payload.get("body", payload) if isinstance(payload, dict) else {}
+        out = handle_green_api_notification_body(body, green_id=green_id, green_token=green_token)
+        return JSONResponse({"ok": True, "processed": bool(out)})
+    except Exception as e:
+        return JSONResponse({"ok": False, "error": str(e)}, status_code=200)
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -2329,7 +2645,7 @@ async def api_send_parcel_draw_link(request: Request):
     cfg = load_saved_config()
     to_phone = body.get("to_phone") or cfg.get("DEFAULT_TEST_PHONE") or "+21621127147"
     farmer_name = body.get("farmer_name") or "الفلاح"
-    draw_url = body.get("draw_url") or "/farmer_portal.html"
+    draw_url = body.get("draw_url") or f"{PUBLIC_SITE_URL}/farmer_portal.html"
     msg_txt = (
         f"مرحبا بيك يا {farmer_name} 🌿\n"
         f"تنجم ترسم حدود قطعة الأرض متاعك وتبعث استشارتك للمهندس مباشرة عبر بوابة الفلاح:\n"
@@ -2375,9 +2691,9 @@ def run_whatsapp_server() -> None:
 
     save_config_key("GEMINI_API_KEY", get_active_gemini_key())
     log_bot_event("=====================================================================")
-    log_bot_event(f"🤖 سيرفر الهندسة الفلاحية يشتغل الآن بنجاح على المنفذ {port}!")
-    log_bot_event(f"👨‍🔬 رابط صفحة المهندس: http://127.0.0.1:{port}/engineer_dashboard.html")
-    log_bot_event(f"🌾 رابط بوابة الفلاح:  http://127.0.0.1:{port}/farmer_portal.html")
+    log_bot_event(f"🤖 سيرفر الهندسة الفلاحية يشتغل الآن بنجاح (Port {port})!")
+    log_bot_event(f"👨‍🔬 رابط صفحة المهندس السحابي: {PUBLIC_SITE_URL}/engineer_dashboard.html")
+    log_bot_event(f"🌾 رابط بوابة الفلاح السحابي:  {PUBLIC_SITE_URL}/farmer_portal.html")
     log_bot_event("=====================================================================")
 
     if not is_cloud_env:
