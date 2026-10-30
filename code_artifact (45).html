@@ -1,0 +1,447 @@
+<!-- ... existing code ... -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+          <span class="text-xs text-slate-500 font-semibold">
+            عند الضغط على الإرسال، تصل رسالتك ومعطيات ضيعتك مباشرة إلى صفحة المهندس الفلاحي لمراجعتها والرد عليك.
+          </span>
+          <button type="button" onclick="submitFarmerConsultationAndFarm()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs md:text-sm px-6 py-3 rounded-2xl shadow-lg transition flex items-center gap-2">
+            <span>📤 إرسال الاستشارة ومعطيات الضيعة إلى المهندس الفلاحي</span>
+            <span>🚀</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- صندوق تأكيد إرسال الاستشارة للمهندس ومتابعة حالة الرد -->
+      <div id="instantDiagnosisCard" class="hidden bg-emerald-950 text-white rounded-3xl p-5 md:p-6 shadow-xl border-2 border-amber-400/70 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-emerald-800 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-xl" id="instantDiagIcon">📨</span>
+            <h3 class="text-base font-extrabold text-amber-300" id="instantDiagTitle">حالة استشارتك لدى مكتب المهندس الفلاحي:</h3>
+          </div>
+          <span id="instantDiagStatusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-500 text-slate-950">
+            ⏳ بانتظار مراجعة ومصادقة المهندس
+          </span>
+        </div>
+        <div id="instantDiagnosisBody" class="text-xs leading-relaxed text-emerald-50 whitespace-pre-line font-medium bg-slate-900/60 p-4 rounded-2xl border border-emerald-800/80">
+          <!-- يُملأ ديناميكياً -->
+        </div>
+        <div class="text-[11px] text-amber-200 flex flex-wrap items-center justify-between gap-2 pt-1">
+          <span>✅ وصلت رسالتك إلى لوحة المهندس (قسم الاستشارات)؛ وعند مصادقة المهندس ستظهر الإجابة النهائية هنا وفي سجل ضيعاتك.</span>
+          <div class="flex items-center gap-2">
+            <a href="engineer_dashboard.html" class="px-3 py-1 rounded-lg font-black gold-badge text-slate-950">👨‍🔬 فتح صفحة المهندس للمصادقة</a>
+            <button type="button" onclick="switchFarmerTab('history')" class="text-white underline font-bold">
+              عرض سجل ضيعاتي ⬅️
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== التبويب 4: سجل ضيعاتي واستشاراتي ==================== -->
+<!-- ... existing code ... -->
+    // ==================== تقديم الاستشارة والتشخيص بالدارجة ====================
+    function normalizeArabicForMatchJS(str) {
+      return String(str || "")
+        .replace(/[ً-ٟـ]/g, "")
+        .replace(/[أإآ]/g, "ا")
+        .replace(/ة/g, "ه")
+        .replace(/ى/g, "ي")
+        .toLowerCase()
+        .trim();
+    }
+
+    function fillQuickConsultText(txt) {
+      const inp = document.getElementById("consultMessageInput");
+      if (inp) {
+        inp.value = txt;
+        showFarmerToast("✨ تم تعمير نص السؤال.");
+      }
+    }
+
+    function generateInstantDerjaDiagnosis(cropVariety, queryText, sector, farmerName = "خويا الفلاح") {
+      const normQ = normalizeArabicForMatchJS(queryText);
+      const normV = normalizeArabicForMatchJS(cropVariety);
+
+      // 1. نحدد المحصول الفردي الذي ذكره الفلاح في سؤاله أولاً أو في خانة الصنف
+      let matchedCropObj = null;
+      if (typeof individualCropsCatalog !== "undefined") {
+        for (const cObj of individualCropsCatalog) {
+          if (cObj.keywords.some(kw => normQ.includes(normalizeArabicForMatchJS(kw)))) {
+            matchedCropObj = cObj;
+            break;
+          }
+        }
+        if (!matchedCropObj) {
+          for (const cObj of individualCropsCatalog) {
+            if (normV.includes(normalizeArabicForMatchJS(cObj.key)) || cObj.keywords.some(kw => normV.includes(normalizeArabicForMatchJS(kw)))) {
+              matchedCropObj = cObj;
+              break;
+            }
+          }
+        }
+      }
+
+      const targetCropName = matchedCropObj ? matchedCropObj.key : (cropVariety || "الغراسة");
+
+      // 2. نبحث عن البطاقة التشخيصية المطابقة للأعراض التي ذكرها الفلاح فعلياً (بدون اختيار عشوائي!)
+      let bestCard = null;
+      let bestScore = 0;
+
+      plantixDiagnosticCards.forEach(c => {
+        const cCropNorm = normalizeArabicForMatchJS(c.crop_name || "");
+        const isGeneral = cCropNorm.includes(normalizeArabicForMatchJS("جميع الغراسات"));
+        if (matchedCropObj && !isGeneral && !cCropNorm.includes(normalizeArabicForMatchJS(matchedCropObj.key))) {
+          return;
+        }
+        let sc = 0;
+        (c.exact_phrases || []).forEach(ep => {
+          if (normQ.includes(normalizeArabicForMatchJS(ep))) sc += 12;
+        });
+        (c.keywords || []).forEach(kw => {
+          if (normQ.includes(normalizeArabicForMatchJS(kw))) sc += 6;
+        });
+        if (sc > 0 && matchedCropObj && cCropNorm.includes(normalizeArabicForMatchJS(matchedCropObj.key))) {
+          sc += 6;
+        }
+        if (sc > bestScore) {
+          bestScore = sc;
+          bestCard = c;
+        }
+      });
+
+      if (bestCard && bestScore >= 6) {
+        return (
+          `مرحبا بيك يا ${farmerName} — بخصوص **${targetCropName}** متاعك:\n` +
+          `• **المرض متاعك:** ${bestCard.diagnosis}\n` +
+          `${bestCard.action}`
+        );
+      }
+
+      // 3. إذا سأل عن التسميد أو السقي أو البرنامج الفني للمحصول بدون ذكر عرض مرضي خاص
+      const asksFert = ["تسميد", "سماد", "غبار", "امونيتر", "فوسفور", "بوتاسيوم", "كالسيوم", "ماكله", "تغذيه"].some(w => normQ.includes(w));
+      const asksWater = ["سقي", "نسقي", "ماء", "الري", "غوت ا غوت", "قطره", "عطش"].some(w => normQ.includes(w));
+
+      if (matchedCropObj) {
+        if (asksFert && !asksWater) {
+          return `مرحبا بيك يا ${farmerName} — بخصوص تسميد **${targetCropName}** متاعك:\n${matchedCropObj.fert_direct}`;
+        }
+        if (asksWater && !asksFert) {
+          return `مرحبا بيك يا ${farmerName} — بخصوص سقي **${targetCropName}** متاعك:\n${matchedCropObj.water_direct}`;
+        }
+        return (
+          `مرحبا بيك يا ${farmerName} — بخصوص **${targetCropName}** متاعك:\n` +
+          `${matchedCropObj.fert_direct}\n${matchedCropObj.water_direct}`
+        );
+      }
+
+      return (
+        `مرحبا بيك يا ${farmerName} — بخصوص **${targetCropName}** متاعك:\n` +
+        `• استفسارك: «${queryText}»\n` +
+        `• المسودة جاهزة للمراجعة الفنية من قبل المهندس الفلاحي لتحديد الدواء والجرعة المضبوطة حسب حالة ضيعتك.`
+      );
+    }
+
+    async function submitFarmerConsultationAndFarm() {
+      const farmerName = (document.getElementById("farmerNameInput")?.value || "").trim() || "فلاح تونسي";
+      const email = (document.getElementById("farmerEmailInput")?.value || "").trim() || "farmer@agri.tn";
+      const phone = (document.getElementById("farmerPhoneInput")?.value || "").trim() || "+216 21 127 147";
+      const gov = document.getElementById("farmerGovSelect")?.value || "بن عروس";
+      const del = document.getElementById("farmerDelSelect")?.value || "مرناق";
+      const farmName = (document.getElementById("farmNameInput")?.value || "").trim() || `ضيعة ${del}`;
+      const regionStr = `${del} - ${gov}`;
+      const sector = document.getElementById("farmerCropCategory")?.value || "خضروات";
+      const cropVariety = (document.getElementById("farmerCropVariety")?.value || "").trim() || sector;
+      const cropAge = (document.getElementById("farmerCropAge")?.value || "").trim() || "طور الإنتاج";
+      const areaHa = parseFloat(document.getElementById("farmerAreaHa")?.value || "2.0") || 2.0;
+      const soil = document.getElementById("farmerSoilType")?.value || "طينية كلسية";
+      const water = (document.getElementById("farmerWaterInfo")?.value || "").trim() || "بئر 1.5 غ/ل";
+      const irri = document.getElementById("farmerIrrigationSystem")?.value || "قطرة قطرة";
+      const msg = (document.getElementById("consultMessageInput")?.value || "").trim();
+
+      if (!msg) {
+        showFarmerToast("⚠️ اكتب استفسارك أو شنوة لاحظت في ضيعتك قبل الإرسال!");
+        return;
+      }
+
+      // حساب مركز القطعة ومقاييسها
+      const metrics = computePolygonMetrics(drawnPoints);
+      let centerLat = 36.6806, centerLon = 10.2892;
+      if (drawnPoints.length >= 1) {
+        centerLat = drawnPoints[0][0];
+        centerLon = drawnPoints[0][1];
+      } else {
+        const delSel = document.getElementById("farmerDelSelect");
+        const opt = delSel ? delSel.options[delSel.selectedIndex] : null;
+        if (opt) {
+          centerLat = parseFloat(opt.getAttribute("data-lat")) || centerLat;
+          centerLon = parseFloat(opt.getAttribute("data-lon")) || centerLon;
+        }
+      }
+
+      // توليد مسودة أولية توضع على مكتب المهندس (لا تُعرض كجواب نهائي للفلاح إلا بعد مصادقة المهندس!)
+      let aiDraftForEngineer = generateInstantDerjaDiagnosis(cropVariety, msg, sector, farmerName);
+      let ticketId = "AGRI-" + Math.floor(100000 + Math.random() * 900000);
+      const farmId = "FARM-" + Math.floor(1000 + Math.random() * 9000);
+      const nowTimeStr = new Date().toLocaleTimeString("ar-TN", { hour: "2-digit", minute: "2-digit" });
+
+      const diagCard = document.getElementById("instantDiagnosisCard");
+      const diagBody = document.getElementById("instantDiagnosisBody");
+      const diagBadge = document.getElementById("instantDiagStatusBadge");
+      if (diagCard && diagBody) {
+        diagBody.textContent = "⏳ جاري إرسال رسالتك ومعطيات ضيعتك إلى صفحة المهندس الفلاحي...";
+        diagCard.classList.remove("hidden");
+      }
+
+      // إرسال الاستشارة للسيرفر المحلي لحفظها في قائمة استشارات المهندس (/api/farmer-query)
+      try {
+        const qResp = await fetch(`${API_BASE}/api/farmer-query`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            plot: {
+              farmer_id: farmId,
+              farmer_name: farmerName,
+              phone_or_chat_id: phone,
+              region: regionStr,
+              crop_category: sector,
+              crop_variety: cropVariety,
+              area_hectares: metrics.ha > 0 ? metrics.ha : areaHa
+            },
+            message_text: msg,
+            gps_lat: centerLat,
+            gps_lon: centerLon
+          })
+        });
+        if (qResp.ok) {
+          const qData = await qResp.json();
+          if (qData.ticket_id) ticketId = qData.ticket_id;
+          if (qData.final_message_to_farmer) {
+            aiDraftForEngineer = qData.final_message_to_farmer;
+          }
+        }
+      } catch (e) {}
+
+      // حفظ التذكرة في الذاكرة المشتركة مع صفحة المهندس (agri_shared_tickets_db) لضمان وصولها فوراً 100%
+      const sharedTicket = {
+        id: ticketId,
+        ticket_id: ticketId,
+        farmer_id: farmId,
+        farmerName: farmerName,
+        farmer_name: farmerName,
+        phone: phone,
+        farmer_chat_id: phone,
+        region: regionStr,
+        locality_name: regionStr,
+        sector: sector,
+        cropVariety: cropVariety,
+        crop_variety: cropVariety,
+        crop_age_label: cropAge,
+        area_hectares: metrics.ha > 0 ? metrics.ha : areaHa,
+        createdAt: nowTimeStr,
+        created_at: nowTimeStr,
+        status: "PENDING",
+        deliveryNote: "⏳ وصلت من بوابة الفلاح — بانتظار مراجعة ومصادقة المهندس",
+        delivery_note: "⏳ وصلت من بوابة الفلاح — بانتظار مراجعة ومصادقة المهندس",
+        farmerMessage: msg,
+        farmer_message: msg,
+        aiResponse: aiDraftForEngineer,
+        ai_draft_response: aiDraftForEngineer,
+        lat: centerLat,
+        lon: centerLon,
+        isExactGps: drawnPoints.length >= 3,
+        is_exact_gps: drawnPoints.length >= 3,
+        polygon_points: drawnPoints.length >= 3 ? drawnPoints : []
+      };
+      saveTicketToSharedStorage(sharedTicket);
+
+      // حفظ في كائن الضيعة المحلي
+      const farmRecord = {
+        ticket_id: ticketId,
+        farmer_id: farmId,
+        farmer_name: farmerName,
+        email: email,
+        phone: phone,
+        farm_name: farmName,
+        region: regionStr,
+        locality_name: regionStr,
+        crop_category: sector,
+        crop_variety: cropVariety,
+        crop_age_label: cropAge,
+        area_hectares: metrics.ha > 0 ? metrics.ha : areaHa,
+        area_m2: metrics.m2 > 0 ? metrics.m2 : Math.round(areaHa * 10000),
+        perimeter_m: metrics.perim,
+        soil_info: soil,
+        water_info: water,
+        irrigation_system: irri,
+        lat: centerLat,
+        lon: centerLon,
+        is_exact_gps: drawnPoints.length >= 3,
+        polygon_points: drawnPoints.length >= 3 ? drawnPoints : null,
+        last_inquiry: msg,
+        consultation_status: "PENDING",
+        ai_response: "",
+        ai_draft_response: aiDraftForEngineer,
+        submitted_at: new Date().toLocaleString("ar-TN")
+      };
+
+      saveFarmToLocalStorage(farmRecord);
+
+      // إرسال للسيرفر المحلي لتثبيت الضيعة على الخريطة المشتركة مع المهندس
+      try {
+        await fetch(`${API_BASE}/api/farmers-map`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            farmer_id: farmId,
+            farmer_name: farmerName,
+            phone: phone,
+            email: email,
+            region: regionStr,
+            locality_name: regionStr,
+            crop_category: sector,
+            crop_variety: cropVariety,
+            crop_age_label: cropAge,
+            area_hectares: farmRecord.area_hectares,
+            area_m2: farmRecord.area_m2,
+            perimeter_m: farmRecord.perimeter_m,
+            lat: centerLat,
+            lon: centerLon,
+            is_exact_gps: Boolean(drawnPoints.length >= 3),
+            polygon_points: farmRecord.polygon_points,
+            soil_info: soil,
+            water_info: water,
+            notes: msg
+          })
+        });
+      } catch (e) {}
+
+      // إظهار بطاقة تأكيد الإرسال للمهندس (بدل أن يجاوب البوت وحده عشوائياً قبل مصادقة المهندس)
+      if (diagCard && diagBody) {
+        if (diagBadge) {
+          diagBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-500 text-slate-950";
+          diagBadge.textContent = "⏳ بانتظار مراجعة ومصادقة المهندس";
+        }
+        diagBody.textContent = (
+          `📨 تم إرسال استشارتك رقم (${ticketId}) ومعطيات ضيعتك إلى صفحة المهندس بنجاح!\n\n` +
+          `• الفلاح: ${farmerName} (${regionStr})\n` +
+          `• الغراسة: ${cropVariety} (${cropAge})\n` +
+          `• سؤالك المرسل للمهندس: «${msg}»\n\n` +
+          `⏳ سيقوم المهندس الفلاحي بمراجعة سؤالك والمصادقة على التشخيص والدواء المناسب، وستظهر لك الإجابة المعتمدة هنا فوراً.`
+        );
+        diagCard.classList.remove("hidden");
+        diagCard.scrollIntoView({ behavior: "smooth" });
+      }
+
+      // تحديث شارة الفلاح والشارات العلوية
+      localStorage.setItem("farmer_logged_name", farmerName);
+      localStorage.setItem("farmer_logged_email", email);
+      updateFarmerHeaderBadge();
+      renderFarmerFarmsHistory();
+
+      showFarmerToast("✅ وصلت رسالتك إلى صفحة المهندس الفلاحي (قسم الاستشارات) وبانتظار مصادقته!");
+    }
+
+    function saveTicketToSharedStorage(ticketObj) {
+      try {
+        let tickets = JSON.parse(localStorage.getItem("agri_shared_tickets_db") || "[]");
+        if (!Array.isArray(tickets)) tickets = [];
+        const existingIdx = tickets.findIndex(t => (t.id || t.ticket_id) === (ticketObj.id || ticketObj.ticket_id));
+        if (existingIdx >= 0) {
+          tickets[existingIdx] = ticketObj;
+        } else {
+          tickets.unshift(ticketObj);
+        }
+        localStorage.setItem("agri_shared_tickets_db", JSON.stringify(tickets));
+      } catch (e) {}
+    }
+
+    function syncApprovedRepliesFromEngineer() {
+      try {
+        const sharedTickets = JSON.parse(localStorage.getItem("agri_shared_tickets_db") || "[]");
+        if (!Array.isArray(sharedTickets) || sharedTickets.length === 0) return;
+        let farms = getFarmsFromLocalStorage();
+        let updatedAny = false;
+
+        farms.forEach(f => {
+          const matchT = sharedTickets.find(t =>
+            (f.ticket_id && (t.id === f.ticket_id || t.ticket_id === f.ticket_id)) ||
+            (t.farmerName === f.farmer_name && t.farmerMessage === f.last_inquiry)
+          );
+          if (matchT && (matchT.status === "APPROVED" || matchT.status === "AUTO_REPLIED")) {
+            const approvedText = matchT.aiResponse || matchT.ai_draft_response || "";
+            if (approvedText && (f.ai_response !== approvedText || f.consultation_status !== "APPROVED")) {
+              f.ai_response = approvedText;
+              f.consultation_status = "APPROVED";
+              updatedAny = true;
+
+              const diagCard = document.getElementById("instantDiagnosisCard");
+              const diagBody = document.getElementById("instantDiagnosisBody");
+              const diagBadge = document.getElementById("instantDiagStatusBadge");
+              if (diagCard && diagBody && !diagCard.classList.contains("hidden")) {
+                if (diagBadge) {
+                  diagBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-400 text-slate-950";
+                  diagBadge.textContent = "✅ تمت المصادقة والرد من المهندس الفلاحي";
+                }
+                diagBody.textContent = approvedText;
+              }
+            }
+          }
+        });
+
+        if (updatedAny) {
+          localStorage.setItem("tunisian_farmer_farms_db", JSON.stringify(farms));
+          renderFarmerFarmsHistory();
+          showFarmerToast("🎉 وصل رد المهندس الفلاحي المعتمد على استشارتك!");
+        }
+      } catch (e) {}
+    }
+<!-- ... existing code ... -->
+            ${f.last_inquiry ? `
+              <div class="bg-amber-50/80 p-3 rounded-xl border border-amber-200 text-xs space-y-1">
+                <div class="flex items-center justify-between">
+                  <span class="font-extrabold text-amber-950">📩 استشارتك المرسلة للمهندس:</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold ${f.consultation_status === 'APPROVED' || f.ai_response ? 'bg-emerald-500 text-slate-950' : 'bg-amber-400 text-slate-950'}">
+                    ${f.consultation_status === 'APPROVED' || f.ai_response ? '✅ تمت المصادقة والرد من المهندس' : '⏳ بانتظار مراجعة ومصادقة المهندس'}
+                  </span>
+                </div>
+                <p class="text-slate-800">"${f.last_inquiry}"</p>
+              </div>
+            ` : ''}
+
+            ${f.ai_response ? `
+              <div class="bg-emerald-950 text-emerald-50 p-3.5 rounded-xl text-xs space-y-1 border border-emerald-500/50">
+                <span class="font-extrabold text-amber-300">🩺 رد وتشخيص المهندس الفلاحي المعتمد:</span>
+                <p class="whitespace-pre-line">${f.ai_response}</p>
+              </div>
+            ` : `
+              <div class="bg-slate-900/80 text-amber-200 p-3 rounded-xl text-xs border border-amber-500/30 flex items-center justify-between">
+                <span>⏳ الاستشارة موجودة الآن في لوحة المهندس بانتظار المراجعة والمصادقة اليدوية.</span>
+                <a href="engineer_dashboard.html" class="px-2.5 py-1 rounded-lg font-black gold-badge text-slate-950 text-[11px]">👨‍🔬 فتح صفحة المهندس</a>
+              </div>
+            `}
+          </div>
+        `;
+      }).join("");
+    }
+<!-- ... existing code ... -->
+    document.addEventListener("DOMContentLoaded", () => {
+      populateGovernoratesSelect();
+      updateFarmerHeaderBadge();
+      const savedFarms = getFarmsFromLocalStorage();
+      if (savedFarms.length > 0) {
+        // تعمير بيانات الفلاح المسجل مسبقاً
+        const top = savedFarms[0];
+        if (top.farmer_name) document.getElementById("farmerNameInput").value = top.farmer_name;
+        if (top.email) document.getElementById("farmerEmailInput").value = top.email;
+        if (top.phone) document.getElementById("farmerPhoneInput").value = top.phone;
+      }
+      syncApprovedRepliesFromEngineer();
+      setInterval(syncApprovedRepliesFromEngineer, 2500);
+      window.addEventListener("storage", (ev) => {
+        if (ev.key === "agri_shared_tickets_db" || ev.key === "tunisian_farmer_farms_db") {
+          syncApprovedRepliesFromEngineer();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
