@@ -1,0 +1,1135 @@
+[
+  {
+    "farmer_id": "FARM-1C497",
+    "farmer_name": "عبدالناصر",
+    "phone": "+21629377847",
+    "region": "الجم - المهدية",
+    "locality_name": "الجم",
+    "lat": 36.6722,
+    "lon": 10.2916,
+    "is_exact_gps": false,
+    "polygon_points": [],
+    "crop_category": "خضروات",
+    "crop_variety": "الجلبانة",
+    "crop_age_label": "طور الإنتاج (شجرة/غراسة منتجة)",
+    "area_hectares": 1.0,
+    "area_m2": 10000.0,
+    "perimeter_m": 0.0,
+    "soil_info": "حسب طبيعة الجهة",
+    "water_info": "مياه مالحة (تريسيتي مرتفعة)",
+    "last_inquiry": "السلام",
+    "updated_at": "2026-10-30 16:26",
+    "utm_zone": "32S",
+    "utm_easting": 615415.76,
+    "utm_northing": 4059286.47
+  },
+  {
+    "farmer_id": "FARM-CC139",
+    "farmer_name": "عبدالناصر",
+    "phone": "+21629377847",
+    "region": "الجم - المهدية",
+    "locality_name": "الجم",
+    "lat": 35.2883,
+    "lon": 10.7088,
+    "is_exact_gps": false,
+    "polygon_points": [],
+    "crop_category": "زراعات_كبرى",
+    "crop_variety": "الزراعات الكبرى (القمح والشعير)",
+    "crop_age_label": "طور الإنتاج (شجرة/غراسة منتجة)",
+    "area_hectares": 1.0,
+    "area_m2": 10000.0,
+    "perimeter_m": 0.0,
+    "soil_info": "حسب طبيعة الجهة",
+    "water_info": "مياه مالحة (تريسيتي مرتفعة)",
+    "last_inquiry": "عندي كثار جلبانه النمو تاعها ضعيفه شهر الجمعه وفاسفرار في الاوراق السفليه",
+    "updated_at": "2026-10-29 22:11",
+    "utm_zone": "32S",
+    "utm_easting": 655389.66,
+    "utm_northing": 3906354.05
+  },
+  {
+    "farmer_id": "FARM-79B5F",
+    "farmer_name": "عبدالناصر",
+    "phone": "+21629377847",
+    "region": "قابس",
+    "locality_name": "قابس",
+    "lat": 33.8731,
+    "lon": 10.1006,
+    "is_exact_gps": false,
+    "polygon_points": [],
+    "crop_category": "زراعات_كبرى",
+    "crop_variety": "الزراعات الكبرى (القمح والشعير)",
+    "crop_age_label": "طور الإنتاج (شجرة/غراسة منتجة)",
+    "area_hectares": 1.0,
+    "area_m2": 10000.0,
+    "perimeter_m": 0.0,
+    "soil_info": "حسب طبيعة الجهة",
+    "water_info": "مياه مالحة (تريسيتي مرتفعة)",
+    "last_inquiry": "عندي هكتار جلبانه في مارس من ولايه قابس العمر بتاعها شهر وجمعه الملوحه نتاع الماء 3.7 وعندي نمو بتاعها بطيء او الاوراق بتاعها اصفر الاوراق اللوت انين",
+    "updated_at": "2026-10-29 16:02",
+    "utm_zone": "32S",
+    "utm_easting": 601791.3,
+    "utm_northing": 3748630.65
+  },
+  {
+    "farmer_id": "FARM-792AF",
+    "farmer_name": "عبدالناصر",
+    "phone": "+21629377847",
+    "region": "مرناق - بن عروس",
+    "locality_name": "مرناق",
+    "lat": 36.6722,
+    "lon": 10.2916,
+    "is_exact_gps": false,
+    "polygon_points": [],
+    "crop_category": "زراعات_كبرى",
+    "crop_variety": "الزراعات الكبرى (القمح والشعير)",
+    "crop_age_label": "طور الإنتاج (شجرة/غراسة منتجة)",
+    "area_hectares": 1.0,
+    "area_m2": 10000.0,
+    "perimeter_m": 0.0,
+    "soil_info": "حسب طبيعة الجهة",
+    "water_info": "حسب طبيعة الجهة",
+    "last_inquiry": "🔗 [الاستفسار الأول]: «عندي جلبانه عمرها شهر وجمعه الاوراق متاع السفليه تصفار ونمو متاعها بطيء شنو اللي لازم» ➕ [المعطيات المضافة]: «النسبه للموقع والمن»",
+    "updated_at": "2026-10-29 15:07",
+    "utm_zone": "32S",
+    "utm_easting": 615415.76,
+    "utm_northing": 4059286.47
+  },
+  {
+    "farmer_id": "FARM-388D5",
+    "farmer_name": "عبدالناصر",
+    "phone": "+21629377847",
+    "region": "قابس",
+    "locality_name": "قابس",
+    "lat": 33.8731,
+    "lon": 10.1006,
+    "is_exact_gps": false,
+    "polygon_points": [],
+    "crop_category": "زياتين",
+    "crop_variety": "الزياتين",
+    "crop_age_label": "14 سنة (شجرة بالغة منتجة)",
+    "area_hectares": 1.0,
+    "area_m2": 10000.0,
+    "perimeter_m": 0.0,
+    "soil_info": "حسب طبيعة الجهة",
+    "water_info": "زراعة مروية بالقطرة",
+    "last_inquiry": "عندي زيتونات لقيتهم ذابلين وماهمش قاعدين يزيدو في النمو",
+    "updated_at": "2026-10-29 14:33",
+    "utm_zone": "32S",
+    "utm_easting": 601791.3,
+    "utm_northing": 3748630.65
+  },
+  {
+    "farmer_id": "FARM-2CB6E",
+    "farmer_name": "فلاح عبر واتساب",
+    "phone": "DEFAULT",
+    "region": "صفاقس",
+    "locality_name": "عقارب",
+    "lat": 34.7374,
+    "lon": 10.5371,
+    "is_exact_gps": false,
+    "polygon_points": [],
+    "crop_category": "زياتين",
+    "crop_variety": "الزياتين",
+    "crop_age_label": "12 سنة (شجرة بالغة منتجة)",
+    "area_hectares": 1.0,
+    "area_m2": 10000.0,
+    "perimeter_m": 0.0,
+    "soil_info": "حسب طبيعة الجهة",
+    "water_info": "حسب طبيعة الجهة",
+    "last_inquiry": "عندي زياتين في عقارب صفاقس عمرها 12 سنة لاحظت دوائر كحلة وصفراء على الورق وكأنه عين الطاووس، شنوة الدواء والجرعة؟",
+    "updated_at": "2026-10-29 14:31",
+    "utm_zone": "32S",
+    "utm_easting": 640715.52,
+    "utm_northing": 3844998.05
+  },
+  {
+    "farmer_id": "FARM-MOR-01",
+    "farmer_name": "الحاج صالح بن عمر",
+    "email": "saleh.morneg@agri.tn",
+    "phone": "+21621127147",
+    "region": "مرناق - بن عروس",
+    "locality_name": "مرناق (ضيعة وادي الحمص 🎯)",
+    "lat": 36.6806,
+    "lon": 10.2892,
+    "is_exact_gps": true,
+    "crop_category": "خضروات",
+    "crop_variety": "الطماطم الفصلية",
+    "crop_age_label": "8 أسابيع (مرحلة عقد وتحجيم)",
+    "area_hectares": 2.48,
+    "area_m2": 24800.0,
+    "perimeter_m": 635.0,
+    "polygon_points": [
+      [
+        36.6814,
+        10.2881
+      ],
+      [
+        36.6815,
+        10.2903
+      ],
+      [
+        36.6801,
+        10.2905
+      ],
+      [
+        36.6799,
+        10.288
+      ]
+    ],
+    "soil_info": "طينية كلسية عميقة",
+    "water_info": "مروية بالقطرة (2.1 dS/m)",
+    "irrigation_system": "قطرة قطرة (Goutte-à-goutte)",
+    "last_inquiry": "تشخيص كحولية قاع الحبة وتعديل جرعة الكالسيوم والبوتاسيوم",
+    "updated_at": "اليوم 08:30",
+    "utm_zone": "32S",
+    "utm_easting": 615188.76,
+    "utm_northing": 4060215.44
+  },
+  {
+    "farmer_id": "FARM-SFX-02",
+    "farmer_name": "سي المنصف الفريخة",
+    "email": "moncef.sfax@agri.tn",
+    "phone": "+21698112340",
+    "region": "عقارب - صفاقس",
+    "locality_name": "عقارب (هنشير الزياتين 🎯)",
+    "lat": 34.7422,
+    "lon": 10.5311,
+    "is_exact_gps": true,
+    "crop_category": "زياتين",
+    "crop_variety": "الزياتين (شملالي ساحلي)",
+    "crop_age_label": "15 سنة (شجرة بالغة منتجة)",
+    "area_hectares": 5.85,
+    "area_m2": 58500.0,
+    "perimeter_m": 970.0,
+    "polygon_points": [
+      [
+        34.7435,
+        10.5295
+      ],
+      [
+        34.7436,
+        10.5326
+      ],
+      [
+        34.7412,
+        10.5328
+      ],
+      [
+        34.741,
+        10.5294
+      ]
+    ],
+    "soil_info": "رملية خفيفة عميقة",
+    "water_info": "سقي تكميلي (3.8 dS/m)",
+    "irrigation_system": "سقي تكميلي بالقطرة",
+    "last_inquiry": "مداواة عين الطاووس وجرعة النحاس والدودين في 100 لتر وبومبا 20 لتر",
+    "updated_at": "اليوم 09:15",
+    "utm_zone": "32S",
+    "utm_easting": 640158.08,
+    "utm_northing": 3845522.01
+  },
+  {
+    "farmer_id": "FARM-SOL-03",
+    "farmer_name": "سي فتحي الماطري",
+    "email": "fathi.soliman@agri.tn",
+    "phone": "+21655430910",
+    "region": "سليمان - نابل",
+    "locality_name": "سليمان (بيوت الطماطم المكيفة 🎯)",
+    "lat": 36.6998,
+    "lon": 10.4912,
+    "is_exact_gps": true,
+    "crop_category": "خضروات",
+    "crop_variety": "طماطم وفلفل بيوت مكيفة",
+    "crop_age_label": "60 يوماً (بداية الجني)",
+    "area_hectares": 1.62,
+    "area_m2": 16200.0,
+    "perimeter_m": 510.0,
+    "polygon_points": [
+      [
+        36.7006,
+        10.4902
+      ],
+      [
+        36.7007,
+        10.4922
+      ],
+      [
+        36.6989,
+        10.4921
+      ],
+      [
+        36.6988,
+        10.4901
+      ]
+    ],
+    "soil_info": "رملية طينية خصبة",
+    "water_info": "مروية بالقطرة (1.8 dS/m)",
+    "irrigation_system": "قطرة قطرة وتسميد آلي",
+    "last_inquiry": "مكافحة دودة التوتا أبسولوتا وأقوى مبيد مرخص مع فترة الأمان",
+    "updated_at": "اليوم 10:00",
+    "utm_zone": "32S",
+    "utm_easting": 633205.23,
+    "utm_northing": 4062607.12
+  },
+  {
+    "farmer_id": "FARM-REG-04",
+    "farmer_name": "سي عبد الرزاق القاسمي",
+    "email": "abderrazak.regueb@agri.tn",
+    "phone": "+21697654321",
+    "region": "الرقاب - سيدي بوزيد",
+    "locality_name": "الرقاب (حقول الدلاع والبطيخ 🎯)",
+    "lat": 34.8585,
+    "lon": 9.7891,
+    "is_exact_gps": true,
+    "crop_category": "خضروات",
+    "crop_variety": "الدلاع سامراء وبطيخ أصفر",
+    "crop_age_label": "45 يوماً (طور الإزهار والعقد)",
+    "area_hectares": 4.2,
+    "area_m2": 42000.0,
+    "perimeter_m": 820.0,
+    "polygon_points": [
+      [
+        34.8596,
+        9.7876
+      ],
+      [
+        34.8598,
+        9.7907
+      ],
+      [
+        34.8574,
+        9.7909
+      ],
+      [
+        34.8572,
+        9.7878
+      ]
+    ],
+    "soil_info": "خفيفة طميية دافئة",
+    "water_info": "بئر عميق (2.4 dS/m)",
+    "irrigation_system": "قطرة قطرة تحت الأنفاق",
+    "last_inquiry": "تشقق وصمغ ساق الدلاع (عفن الساق الصمغي) وبرنامج السقي",
+    "updated_at": "اليوم 10:45",
+    "utm_zone": "32S",
+    "utm_easting": 572131.22,
+    "utm_northing": 3857635.34
+  },
+  {
+    "farmer_id": "FARM-SBT-05",
+    "farmer_name": "سي الأزهر العبيدي",
+    "email": "lazhar.sbeitla@agri.tn",
+    "phone": "+21694887766",
+    "region": "سبيطلة - القصرين",
+    "locality_name": "سبيطلة (غابات التفاح والإجاص 🎯)",
+    "lat": 35.2341,
+    "lon": 9.1235,
+    "is_exact_gps": true,
+    "crop_category": "أشجار_مثمرة",
+    "crop_variety": "التفاح والإجاص (أشجار مثمرة)",
+    "crop_age_label": "8 سنوات (طور الإنتاج الكامل)",
+    "area_hectares": 3.75,
+    "area_m2": 37500.0,
+    "perimeter_m": 780.0,
+    "polygon_points": [
+      [
+        35.2352,
+        9.1221
+      ],
+      [
+        35.2353,
+        9.125
+      ],
+      [
+        35.233,
+        9.1251
+      ],
+      [
+        35.2329,
+        9.122
+      ]
+    ],
+    "soil_info": "طميية كلسية عميقة",
+    "water_info": "سد وري قطرة (1.4 dS/m)",
+    "irrigation_system": "قطرة قطرة مع شباك واقية",
+    "last_inquiry": "مكافحة دودة ثمار التفاح (الكربوكابس) وفترة الأمان قبل الجني",
+    "updated_at": "اليوم 11:15",
+    "utm_zone": "32S",
+    "utm_easting": 511237.39,
+    "utm_northing": 3899011.35
+  },
+  {
+    "farmer_id": "FARM-MEJ-06",
+    "farmer_name": "سي البشير الورتاني",
+    "email": "bechir.beja@agri.tn",
+    "phone": "+21693221100",
+    "region": "مجاز الباب - باجة",
+    "locality_name": "مجاز الباب (سهول مجردة للحبوب 🎯)",
+    "lat": 36.6489,
+    "lon": 9.6124,
+    "is_exact_gps": true,
+    "crop_category": "زراعات_كبرى",
+    "crop_variety": "القمح الصلب (كريم) والشعير",
+    "crop_age_label": "طور التفريع والاستطالة",
+    "area_hectares": 12.5,
+    "area_m2": 125000.0,
+    "perimeter_m": 1420.0,
+    "polygon_points": [
+      [
+        36.6509,
+        9.6101
+      ],
+      [
+        36.6512,
+        9.6152
+      ],
+      [
+        36.6468,
+        9.6155
+      ],
+      [
+        36.6465,
+        9.6103
+      ]
+    ],
+    "soil_info": "طينية ثقيلة خصبة (تيرس)",
+    "water_info": "غراسة بعلية ممطرة (0.8 dS/m)",
+    "irrigation_system": "بعلي (Bour)",
+    "last_inquiry": "مداواة أعشاب المدهن والخرطال البري والسبتوريا في القمح",
+    "updated_at": "اليوم 11:45",
+    "utm_zone": "32S",
+    "utm_easting": 554738.75,
+    "utm_northing": 4056099.48
+  },
+  {
+    "farmer_id": "FARM-BOS-07",
+    "farmer_name": "سي الهادي الزغواني",
+    "email": "hedi.zaghouan@agri.tn",
+    "phone": "+21696334455",
+    "region": "زغوان",
+    "locality_name": "بوشا - زغوان (ضيعة الزيتون والخوخ 🎯)",
+    "lat": 36.4021,
+    "lon": 10.1425,
+    "is_exact_gps": true,
+    "crop_category": "أشجار_مثمرة",
+    "crop_variety": "زيتون شتوي وأشجار خوخ",
+    "crop_age_label": "10 سنوات (منتجة)",
+    "area_hectares": 6.1,
+    "area_m2": 61000.0,
+    "perimeter_m": 990.0,
+    "polygon_points": [
+      [
+        36.4035,
+        10.1408
+      ],
+      [
+        36.4037,
+        10.1444
+      ],
+      [
+        36.4007,
+        10.1446
+      ],
+      [
+        36.4005,
+        10.141
+      ]
+    ],
+    "soil_info": "طينية كلسية جيدة الصرف",
+    "water_info": "بئر سطحي (1.9 dS/m)",
+    "irrigation_system": "قطرة قطرة",
+    "last_inquiry": "تكمش أوراق الخوخ (الكلوك) ومداواة الصدأ في الربيع",
+    "updated_at": "أمس 14:20",
+    "utm_zone": "32S",
+    "utm_easting": 602447.57,
+    "utm_northing": 4029154.93
+  },
+  {
+    "farmer_id": "FARM-KOR-08",
+    "farmer_name": "سي الحبيب القليبي",
+    "email": "habib.kelibia@agri.tn",
+    "phone": "+21650119922",
+    "region": "قليبية - نابل",
+    "locality_name": "قليبية (حقول البطاطا والقوارص 🎯)",
+    "lat": 36.8524,
+    "lon": 11.0921,
+    "is_exact_gps": true,
+    "crop_category": "خضروات",
+    "crop_variety": "بطاطا آخر فصلية وقوارص",
+    "crop_age_label": "70 يوماً (طور تكوين الدرنات)",
+    "area_hectares": 2.9,
+    "area_m2": 29000.0,
+    "perimeter_m": 680.0,
+    "polygon_points": [
+      [
+        36.8535,
+        11.0908
+      ],
+      [
+        36.8537,
+        11.0935
+      ],
+      [
+        36.8513,
+        11.0937
+      ],
+      [
+        36.8511,
+        11.091
+      ]
+    ],
+    "soil_info": "رملية حمراء ساحلية خصبة",
+    "water_info": "مياه بئر حلوة (1.2 dS/m)",
+    "irrigation_system": "رشاشات وقطرة قطرة",
+    "last_inquiry": "الوقاية من ميلديو البطاطا وسوسة الدرنات في آخر الموسم",
+    "updated_at": "أمس 15:10",
+    "utm_zone": "32S",
+    "utm_easting": 686517.76,
+    "utm_northing": 4080541.67
+  },
+  {
+    "farmer_id": "FARM-KAI-09",
+    "farmer_name": "سي المنور السبوعي",
+    "email": "mnawar.kairouan@agri.tn",
+    "phone": "+21699778899",
+    "region": "الشبيكة - القيروان",
+    "locality_name": "الشبيكة (مزارع الفلفل والمشمش 🎯)",
+    "lat": 35.6214,
+    "lon": 9.9245,
+    "is_exact_gps": true,
+    "crop_category": "خضروات",
+    "crop_variety": "فلفل باكورات وأشجار مشمش",
+    "crop_age_label": "مرحلة تزهير وعقد الثمار",
+    "area_hectares": 3.4,
+    "area_m2": 34000.0,
+    "perimeter_m": 740.0,
+    "polygon_points": [
+      [
+        35.6225,
+        9.9231
+      ],
+      [
+        35.6227,
+        9.926
+      ],
+      [
+        35.6203,
+        9.9262
+      ],
+      [
+        35.6201,
+        9.9233
+      ]
+    ],
+    "soil_info": "فيضية طميية خفيفة",
+    "water_info": "بئر عميق (2.6 dS/m)",
+    "irrigation_system": "قطرة قطرة مع تسميد",
+    "last_inquiry": "تساقط أوراق الفلفل جراء البورماد وحلم التارسونيم",
+    "updated_at": "أمس 16:30",
+    "utm_zone": "32S",
+    "utm_easting": 583720.6,
+    "utm_northing": 3942350.92
+  },
+  {
+    "farmer_id": "FARM-TAB-10",
+    "farmer_name": "سي فريد الماجري",
+    "email": "farid.tabarka@agri.tn",
+    "phone": "+21692445566",
+    "region": "فرنانة - جندوبة",
+    "locality_name": "فرنانة (حقول البقوليات والحبوب 🎯)",
+    "lat": 36.6541,
+    "lon": 8.6985,
+    "is_exact_gps": true,
+    "crop_category": "زراعات_كبرى",
+    "crop_variety": "جلبانة وفول وقرط فصة",
+    "crop_age_label": "طور تزهير وقرون خضراء",
+    "area_hectares": 8.2,
+    "area_m2": 82000.0,
+    "perimeter_m": 1150.0,
+    "polygon_points": [
+      [
+        36.6558,
+        8.6965
+      ],
+      [
+        36.656,
+        8.7008
+      ],
+      [
+        36.6524,
+        8.701
+      ],
+      [
+        36.6522,
+        8.6967
+      ]
+    ],
+    "soil_info": "طينية رطبة غنية بالمادة العضوية",
+    "water_info": "أمطار غزيرة وري مكمل (0.6 dS/m)",
+    "irrigation_system": "بعلي وسقي بالرش",
+    "last_inquiry": "تبقع الشكلاطة في الفول والأنثراكنوز في الجلبانة",
+    "updated_at": "أمس 17:00",
+    "utm_zone": "32S",
+    "utm_easting": 473052.65,
+    "utm_northing": 4056544.01
+  },
+  {
+    "farmer_id": "FARM-DEG-11",
+    "farmer_name": "سي عبد القادر بن سالم",
+    "email": "kader.degache@agri.tn",
+    "phone": "+21695667788",
+    "region": "دغاش - توزر",
+    "locality_name": "دغاش (واحات دقلة النور 🎯)",
+    "lat": 33.9782,
+    "lon": 8.2145,
+    "is_exact_gps": true,
+    "crop_category": "أشجار_مثمرة",
+    "crop_variety": "النخيل (دقلة النور الفاخرة)",
+    "crop_age_label": "20 سنة (واحة منتجة)",
+    "area_hectares": 3.15,
+    "area_m2": 31500.0,
+    "perimeter_m": 710.0,
+    "polygon_points": [
+      [
+        33.9792,
+        8.2132
+      ],
+      [
+        33.9794,
+        8.216
+      ],
+      [
+        33.9772,
+        8.2162
+      ],
+      [
+        33.977,
+        8.2134
+      ]
+    ],
+    "soil_info": "رملية واحات عميقة",
+    "water_info": "مياه عين جوفية (3.2 dS/m)",
+    "irrigation_system": "غمراً بالربطة ورذاذ تحت النخيل",
+    "last_inquiry": "مكافحة عنكبوت الغبار (بوفروة) ودودة التمر في الصيف",
+    "updated_at": "منذ يومين",
+    "utm_zone": "32S",
+    "utm_easting": 427441.39,
+    "utm_northing": 3760016.82
+  },
+  {
+    "farmer_id": "FARM-KEB-12",
+    "farmer_name": "سي الطاهر المرزوقي",
+    "email": "taher.kebili@agri.tn",
+    "phone": "+21691332211",
+    "region": "دوز - قبلي",
+    "locality_name": "دوز (غابات النخيل والخضروات 🎯)",
+    "lat": 33.4658,
+    "lon": 9.0234,
+    "is_exact_gps": true,
+    "crop_category": "أشجار_مثمرة",
+    "crop_variety": "دقلة النور وخضروات تحت النخيل",
+    "crop_age_label": "طور الإثمار الكامل",
+    "area_hectares": 2.8,
+    "area_m2": 28000.0,
+    "perimeter_m": 670.0,
+    "polygon_points": [
+      [
+        33.4668,
+        9.0221
+      ],
+      [
+        33.467,
+        9.0248
+      ],
+      [
+        33.4648,
+        9.025
+      ],
+      [
+        33.4646,
+        9.0223
+      ]
+    ],
+    "soil_info": "رملية ناعمة عميقة",
+    "water_info": "بئر عميق حار مبرد (3.5 dS/m)",
+    "irrigation_system": "سواقي وقطرة قطرة",
+    "last_inquiry": "برنامج سقي النخيل وقت الشهيلي ومكافحة دودة التمر",
+    "updated_at": "منذ يومين",
+    "utm_zone": "32S",
+    "utm_easting": 502174.37,
+    "utm_northing": 3702927.76
+  },
+  {
+    "farmer_id": "FARM-ZAR-13",
+    "farmer_name": "سي المنجي التريكي",
+    "email": "monji.zarzis@agri.tn",
+    "phone": "+21698440011",
+    "region": "جرجيس - مدنين",
+    "locality_name": "جرجيس (غابات الزياتين الساحلية 🎯)",
+    "lat": 33.5042,
+    "lon": 11.1124,
+    "is_exact_gps": true,
+    "crop_category": "زياتين",
+    "crop_variety": "زيتون شملالي جرجيسي",
+    "crop_age_label": "25 سنة (غراسة كلاسيكية متسعة)",
+    "area_hectares": 9.4,
+    "area_m2": 94000.0,
+    "perimeter_m": 1230.0,
+    "polygon_points": [
+      [
+        33.506,
+        11.1102
+      ],
+      [
+        33.5063,
+        11.115
+      ],
+      [
+        33.5024,
+        11.1152
+      ],
+      [
+        33.5021,
+        11.1104
+      ]
+    ],
+    "soil_info": "رملية حمراء خفيفة",
+    "water_info": "غراسة بعلية مع سقي غسيل (4.2 dS/m)",
+    "irrigation_system": "بعلي وسقي تكميلي بالصهريج",
+    "last_inquiry": "تدبير ملوحة التربة ومداواة ذبابة الزيتون الساحلية",
+    "updated_at": "منذ 3 أيام",
+    "utm_zone": "32S",
+    "utm_easting": 696219.09,
+    "utm_northing": 3709182.07
+  },
+  {
+    "farmer_id": "FARM-GAB-14",
+    "farmer_name": "سي محمد الطرابلسي",
+    "email": "mohamed.gabes@agri.tn",
+    "phone": "+21654889900",
+    "region": "الحامة - قابس",
+    "locality_name": "الحامة (واحات الرمان القابسي 🎯)",
+    "lat": 33.8821,
+    "lon": 9.7985,
+    "is_exact_gps": true,
+    "crop_category": "أشجار_مثمرة",
+    "crop_variety": "الرمان القابسي والنخيل",
+    "crop_age_label": "12 سنة (أشجار بالغة)",
+    "area_hectares": 2.6,
+    "area_m2": 26000.0,
+    "perimeter_m": 645.0,
+    "polygon_points": [
+      [
+        33.8831,
+        9.7972
+      ],
+      [
+        33.8833,
+        9.7999
+      ],
+      [
+        33.8811,
+        9.8001
+      ],
+      [
+        33.8809,
+        9.7974
+      ]
+    ],
+    "soil_info": "طميية كلسية عميقة",
+    "water_info": "مياه الحامة السطحية (2.9 dS/m)",
+    "irrigation_system": "قطرة قطرة وسواقي",
+    "last_inquiry": "تطرشق ثمار الرمان ومنّ البراعم وطرق التسميد بالكالسيوم",
+    "updated_at": "منذ 3 أيام",
+    "utm_zone": "32S",
+    "utm_easting": 573842.38,
+    "utm_northing": 3749370.45
+  },
+  {
+    "farmer_id": "FARM-TEB-15",
+    "farmer_name": "سي كمال الميساوي",
+    "email": "kamel.tebourba@agri.tn",
+    "phone": "+21697112233",
+    "region": "طبربة - منوبة",
+    "locality_name": "طبربة (كروم العنب والبطاطا 🎯)",
+    "lat": 36.8285,
+    "lon": 9.8451,
+    "is_exact_gps": true,
+    "crop_category": "أشجار_مثمرة",
+    "crop_variety": "كروم عنب مائدة وبطاطا ربيعية",
+    "crop_age_label": "6 سنوات (كروم معلقة)",
+    "area_hectares": 4.5,
+    "area_m2": 45000.0,
+    "perimeter_m": 850.0,
+    "polygon_points": [
+      [
+        36.8298,
+        9.8435
+      ],
+      [
+        36.83,
+        9.8468
+      ],
+      [
+        36.8272,
+        9.847
+      ],
+      [
+        36.827,
+        9.8437
+      ]
+    ],
+    "soil_info": "طميية طينية فيضية لوادي مجردة",
+    "water_info": "مياه القنال وسد (1.6 dS/m)",
+    "irrigation_system": "قطرة قطرة حديث",
+    "last_inquiry": "الوقاية من ميلديو وبورماد العنب والعفن الرمادي",
+    "updated_at": "منذ 4 أيام",
+    "utm_zone": "32S",
+    "utm_easting": 575362.99,
+    "utm_northing": 4076180.76
+  },
+  {
+    "farmer_id": "FARM-MAT-16",
+    "farmer_name": "سي عادل الدراجي",
+    "email": "adel.mateur@agri.tn",
+    "phone": "+21693776655",
+    "region": "ماطر - بنزرت",
+    "locality_name": "ماطر (سهول إشكل والقمح 🎯)",
+    "lat": 37.0412,
+    "lon": 9.6645,
+    "is_exact_gps": true,
+    "crop_category": "زراعات_كبرى",
+    "crop_variety": "قمح صلب وبطاطا وقوارص",
+    "crop_age_label": "مرحلة السنابل والتزهير",
+    "area_hectares": 7.8,
+    "area_m2": 78000.0,
+    "perimeter_m": 1120.0,
+    "polygon_points": [
+      [
+        37.0428,
+        9.6625
+      ],
+      [
+        37.043,
+        9.6668
+      ],
+      [
+        37.0396,
+        9.667
+      ],
+      [
+        37.0394,
+        9.6627
+      ]
+    ],
+    "soil_info": "طينية سوداء خصبة (تيرس غني)",
+    "water_info": "أمطار وسد جومين (0.9 dS/m)",
+    "irrigation_system": "رشاشات محورية وقطرة",
+    "last_inquiry": "الوقاية من صدأ القمح الأصفر وتبقع السبتوريا في ورقة العلم",
+    "updated_at": "منذ 4 أيام",
+    "utm_zone": "32S",
+    "utm_easting": 559093.05,
+    "utm_northing": 4099649.26
+  },
+  {
+    "farmer_id": "FARM-KOU-17",
+    "farmer_name": "سي الصادق العوني",
+    "email": "sadek.korba@agri.tn",
+    "phone": "+21652334455",
+    "region": "قربة - نابل",
+    "locality_name": "قربة (طماطم التحويل والفراولة 🎯)",
+    "lat": 36.5784,
+    "lon": 10.8572,
+    "is_exact_gps": true,
+    "crop_category": "خضروات",
+    "crop_variety": "طماطم تحويلية وفراولة (فريز)",
+    "crop_age_label": "طور التحجيم والإنضاج",
+    "area_hectares": 3.2,
+    "area_m2": 32000.0,
+    "perimeter_m": 720.0,
+    "polygon_points": [
+      [
+        36.5795,
+        10.8558
+      ],
+      [
+        36.5797,
+        10.8587
+      ],
+      [
+        36.5773,
+        10.8589
+      ],
+      [
+        36.5771,
+        10.856
+      ]
+    ],
+    "soil_info": "رملية خصبة مفككة",
+    "water_info": "بئر ساحلي (1.5 dS/m)",
+    "irrigation_system": "قطرة قطرة مع تسميد",
+    "last_inquiry": "عفن ثمار الفريز الرمادي ومكافحة دودة التوتا أبسولوتا",
+    "updated_at": "منذ 5 أيام",
+    "utm_zone": "32S",
+    "utm_easting": 666162.72,
+    "utm_northing": 4049709.73
+  },
+  {
+    "farmer_id": "FARM-JEM-18",
+    "farmer_name": "سي رشيد بوعلي",
+    "email": "rachid.djem@agri.tn",
+    "phone": "+21698556677",
+    "region": "الجم - المهدية",
+    "locality_name": "الجم (زياتين الساحل وأشجار التين 🎯)",
+    "lat": 35.3021,
+    "lon": 10.7124,
+    "is_exact_gps": true,
+    "crop_category": "زياتين",
+    "crop_variety": "زيتون شملالي وأشجار تين",
+    "crop_age_label": "18 سنة (شجرة بالغة)",
+    "area_hectares": 7.1,
+    "area_m2": 71000.0,
+    "perimeter_m": 1060.0,
+    "polygon_points": [
+      [
+        35.3038,
+        10.7104
+      ],
+      [
+        35.304,
+        10.7145
+      ],
+      [
+        35.3004,
+        10.7147
+      ],
+      [
+        35.3002,
+        10.7106
+      ]
+    ],
+    "soil_info": "طميية كلسية عميقة",
+    "water_info": "سقي تكميلي (3.4 dS/m)",
+    "irrigation_system": "قطرة قطرة متباعدة",
+    "last_inquiry": "حشرة الزيتون القشرية والكحولية السوداء وتسميد البوتاسيوم",
+    "updated_at": "منذ 5 أيام",
+    "utm_zone": "32S",
+    "utm_easting": 655690.62,
+    "utm_northing": 3907890.37
+  },
+  {
+    "farmer_id": "FARM-MON-19",
+    "farmer_name": "سي فوزي بن نصر",
+    "email": "faouzi.moknine@agri.tn",
+    "phone": "+21655667788",
+    "region": "المكنين - المنستير",
+    "locality_name": "المكنين (بيوت الفلفل والخيار 🎯)",
+    "lat": 35.6285,
+    "lon": 10.9012,
+    "is_exact_gps": true,
+    "crop_category": "خضروات",
+    "crop_variety": "فلفل حار وخيار بيوت مكيفة",
+    "crop_age_label": "3 أشهر (طور جني متواصل)",
+    "area_hectares": 1.75,
+    "area_m2": 17500.0,
+    "perimeter_m": 530.0,
+    "polygon_points": [
+      [
+        35.6293,
+        10.9001
+      ],
+      [
+        35.6294,
+        10.9023
+      ],
+      [
+        35.6277,
+        10.9024
+      ],
+      [
+        35.6276,
+        10.9002
+      ]
+    ],
+    "soil_info": "رملية طينية دافئة",
+    "water_info": "بئر سطحي (2.2 dS/m)",
+    "irrigation_system": "قطرة قطرة",
+    "last_inquiry": "موت التاج الأسود (الفيتوفثورا) في الفلفل وبرنامج السقي",
+    "updated_at": "منذ أسبوع",
+    "utm_zone": "32S",
+    "utm_easting": 672160.92,
+    "utm_northing": 3944409.2
+  },
+  {
+    "farmer_id": "FARM-ENF-20",
+    "farmer_name": "سي الشاذلي الهمامي",
+    "email": "chadli.enfida@agri.tn",
+    "phone": "+21699443322",
+    "region": "النفيضة - سوسة",
+    "locality_name": "النفيضة (الزياتين المكثفة والرمان 🎯)",
+    "lat": 36.1345,
+    "lon": 10.3789,
+    "is_exact_gps": true,
+    "crop_category": "زياتين",
+    "crop_variety": "زياتين مكثفة (أربكينا وشملالي)",
+    "crop_age_label": "7 سنوات (مكثف بالقطرة)",
+    "area_hectares": 8.6,
+    "area_m2": 86000.0,
+    "perimeter_m": 1180.0,
+    "polygon_points": [
+      [
+        36.1362,
+        10.3768
+      ],
+      [
+        36.1364,
+        10.3812
+      ],
+      [
+        36.1328,
+        10.3814
+      ],
+      [
+        36.1326,
+        10.377
+      ]
+    ],
+    "soil_info": "طينية كلسية سهلية",
+    "water_info": "بئر عميق (2.5 dS/m)",
+    "irrigation_system": "قطرة قطرة مضغوط",
+    "last_inquiry": "برنامج التسميد الأسبوعي للزياتين المكثفة ومكافحة البسيلا",
+    "updated_at": "منذ أسبوع",
+    "utm_zone": "32S",
+    "utm_easting": 624069.29,
+    "utm_northing": 3999747.1
+  },
+  {
+    "farmer_id": "FARM-KEF-21",
+    "farmer_name": "سي سمير الشارني",
+    "email": "samir.kef@agri.tn",
+    "phone": "+21696554433",
+    "region": "تاجروين - الكاف",
+    "locality_name": "تاجروين (مزارع الحبوب واللوز 🎯)",
+    "lat": 35.8924,
+    "lon": 8.5521,
+    "is_exact_gps": true,
+    "crop_category": "زراعات_كبرى",
+    "crop_variety": "قمح صلب وشعير ولوز مروي",
+    "crop_age_label": "طور تكوين السنابل",
+    "area_hectares": 11.2,
+    "area_m2": 112000.0,
+    "perimeter_m": 1340.0,
+    "polygon_points": [
+      [
+        35.8942,
+        8.5498
+      ],
+      [
+        35.8945,
+        8.5546
+      ],
+      [
+        35.8906,
+        8.5548
+      ],
+      [
+        35.8903,
+        8.55
+      ]
+    ],
+    "soil_info": "كلسية عميقة شبه جافة",
+    "water_info": "بعلي وسقي تكميلي (1.1 dS/m)",
+    "irrigation_system": "بعلي وقطرة قطرة للوز",
+    "last_inquiry": "مكافحة خنفساء الكابنود في أشجار اللوز وحشيش القمح",
+    "updated_at": "منذ أسبوع",
+    "utm_zone": "32S",
+    "utm_easting": 459576.94,
+    "utm_northing": 3972106.78
+  },
+  {
+    "farmer_id": "FARM-SIL-22",
+    "farmer_name": "سي لطفي الحمروني",
+    "email": "lotfi.siliana@agri.tn",
+    "phone": "+21694665544",
+    "region": "قعفور - سليانة",
+    "locality_name": "قعفور (سهول القمح والمشمش 🎯)",
+    "lat": 36.3214,
+    "lon": 9.3245,
+    "is_exact_gps": true,
+    "crop_category": "زراعات_كبرى",
+    "crop_variety": "قمح صلب وبقوليات ومشمش",
+    "crop_age_label": "طور امتلاء الحبوب",
+    "area_hectares": 9.8,
+    "area_m2": 98000.0,
+    "perimeter_m": 1250.0,
+    "polygon_points": [
+      [
+        36.3232,
+        8.3222
+      ],
+      [
+        36.3235,
+        9.3268
+      ],
+      [
+        36.3196,
+        9.327
+      ],
+      [
+        36.3193,
+        9.3224
+      ]
+    ],
+    "soil_info": "طينية خصبة عميقة",
+    "water_info": "مروية بسد سليانة (1.0 dS/m)",
+    "irrigation_system": "رشاشات وبعلي",
+    "last_inquiry": "مكافحة المونيليا في المشمش والسبتوريا في القمح",
+    "updated_at": "منذ أسبوع",
+    "utm_zone": "32S",
+    "utm_easting": 529127.33,
+    "utm_northing": 4019646.23
+  },
+  {
+    "farmer_id": "FARM-SBI-23",
+    "farmer_name": "سي وحيد الطرابلسي",
+    "email": "wahid.sbiba@agri.tn",
+    "phone": "+21697889900",
+    "region": "سبيبة - القصرين",
+    "locality_name": "سبيبة (عاصمة التفاح التونسي 🎯)",
+    "lat": 35.5421,
+    "lon": 9.0712,
+    "is_exact_gps": true,
+    "crop_category": "أشجار_مثمرة",
+    "crop_variety": "تفاح سبيبة (غولدن ودليشوس)",
+    "crop_age_label": "10 سنوات (أشجار بالغة)",
+    "area_hectares": 5.4,
+    "area_m2": 54000.0,
+    "perimeter_m": 930.0,
+    "polygon_points": [
+      [
+        35.5435,
+        9.0698
+      ],
+      [
+        35.5437,
+        9.073
+      ],
+      [
+        35.5407,
+        9.0732
+      ],
+      [
+        35.5405,
+        9.07
+      ]
+    ],
+    "soil_info": "فيضية كلسية جبلية ممتازة",
+    "water_info": "سد وري قطرة قطرة (1.1 dS/m)",
+    "irrigation_system": "قطرة قطرة مع شباك واقية من البرد",
+    "last_inquiry": "مكافحة جرب التفاح (التافلور) والوقاية من اللفحة النارية",
+    "updated_at": "منذ أسبوع",
+    "utm_zone": "32S",
+    "utm_easting": 506453.98,
+    "utm_northing": 3933164.92
+  }
+]

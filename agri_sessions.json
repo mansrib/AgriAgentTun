@@ -1,0 +1,43 @@
+{
+  "21629377847": {
+    "pending_asks_fertigation": false,
+    "pending_asks_irrigation": false,
+    "pending_asks_pest": false,
+    "pending_asks_modernization": false,
+    "pending_matched_card_ids": [],
+    "pending_question_text": "السلام",
+    "updated_at_ts": 1793373970.9101849,
+    "awaiting_intake_completion": false,
+    "pending_ticket_id": "AGRI-1CFBE6",
+    "lat": 36.6722,
+    "lon": 10.2916,
+    "is_exact_gps": false,
+    "locality_name": "الجم",
+    "region": "الجم - المهدية",
+    "crop_age_label": "طور الإنتاج (شجرة/غراسة منتجة)",
+    "crop_age_stage": "adult",
+    "water_info": "مياه مالحة (تريسيتي مرتفعة)",
+    "crop_category": "خضروات",
+    "crop_variety": "الجلبانة"
+  },
+  "21621127147": {
+    "region": "صفاقس",
+    "crop_category": "زياتين",
+    "crop_variety": "الزياتين",
+    "crop_age_label": "12 سنة (شجرة بالغة منتجة)",
+    "crop_age_stage": "adult",
+    "pending_asks_fertigation": false,
+    "pending_asks_irrigation": false,
+    "pending_asks_pest": true,
+    "pending_asks_modernization": false,
+    "pending_matched_card_ids": [
+      "olive_peacock_spot"
+    ],
+    "pending_question_text": "عندي زياتين في عقارب صفاقس عمرها 12 سنة لاحظت دوائر كحلة وصفراء على الورق وكأنه عين الطاووس، شنوة الدواء والجرعة؟",
+    "updated_at_ts": 1793280704.4172332,
+    "lat": 34.7374,
+    "lon": 10.5371,
+    "is_exact_gps": false,
+    "locality_name": "عقارب"
+  }
+}

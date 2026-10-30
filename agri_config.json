@@ -1,0 +1,23 @@
+{
+  "AUTO_REPLY_MODE": false,
+  "MANUAL_APPROVAL_ENFORCED_V9": true,
+  "ZEINEB_VOICE_DEFAULT_V8": true,
+  "BOT_REPLY_FORMAT": "text",
+  "BOT_VOICE_NAME": "ar-TN-ReemNeural",
+  "BOT_ENGINEER_NAME": "المهندسة الفلاحية زينب العزيزي",
+  "DEFAULT_TEST_PHONE": "DEFAULT",
+  "GEMINI_API_KEY": "AQ.Ab8RN6LrEnxQzq1hF6lNqwsHunB1ZJBMm0gNQNK_zAMqnldExw",
+  "BOT_OFFICE_NAME": "🌿 المهندسة الفلاحية زينب العزيزي — مكتب الدراسات والاستشارات الفلاحية",
+  "BOT_WELCOME_MESSAGE": "مرحبا بيك في مكتب الهندسة الفلاحية وتعصير المستغلات 🌿\nباش نعطيك نصيحة دقيقة وصحيحة، اكتبلي في ميساج واحد:\n1️⃣ نوع الغراسة وعمرها (مثلاً: زياتين، قوارص، طماطم، فلفل...)\n2️⃣ المنطقة (الولاية أو المعتمدية)\n3️⃣ شنوة الإشكال بالضبط؟ (أعراض على الأوراق/الحبة، وقت السقي، أو التسميد)\nوإذا تنجم ابعثلي تصويرة واضحة للورقة أو الكعبة المصابة!",
+  "BOT_CUSTOM_INSTRUCTIONS": "أجب حصرياً وفي صلب الموضوع المحدد الذي سأل عنه الفلاح (إذا سأل عن التسميد أجب عن التسميد فقط، وإذا سأل عن السقي أجب عن السقي فقط، وإذا سأل عن مرض أجب عن المرض فقط) وبما يطابق غراسته المحددة ومنطقته المحددة في تونس. لا تضف أبداً تشخيص أمراض أو مبيدات إذا كان السؤال عن التسميد أو السقي!",
+  "AUTO_REPLY_DEFAULT_V7": true,
+  "MANUAL_APPROVAL_DEFAULT_SET_V4": true,
+  "SINGLE_TOPIC_PRECISION_V5": true,
+  "SINGLE_TOPIC_PRECISION_V6": true,
+  "TELEGRAM_BOT_TOKEN": "8130998768:AAF3ZFt9YC74m1A6UCgR9wgKdt8M7Sja99M",
+  "WHATSAPP_ACCESS_TOKEN": "EAAaLAbLu7SkBSyD5E06o0QASf7Hp7HXZCPZCIiSD2B6T2m4hHZCUSydD38kbYLFx2ZA3bQKZA0KWZCfzywZBF7f6XG0oCllCBCi2UcCyCNtMYNJT8389MHMcZAGanwujqYhuduhmQnBZALN71WgiGc0rAxQLMDAywAr6yT3GSdTUNpuki0Rx3Tcq811ysNmaN1IM8fWYlfEfplLzIZAbdQOshFUmJoKQ57ENSfNOMZBpTwgmxE4qm8IUkzo8GRXSUqQVxvuHNaHPZB2Nhauh33ghMQbt",
+  "WHATSAPP_PHONE_NUMBER_ID": "1322078167665545",
+  "WHATSAPP_SETUP_DONE": "true",
+  "GREEN_API_INSTANCE_ID": "710722782628",
+  "GREEN_API_TOKEN": "04da9cd866fe4b75a2fa9d8e9d4b06d0835de004ff0a45ff87"
+}
