@@ -234,13 +234,15 @@ def load_saved_config() -> Dict[str, Any]:
         "AUTO_REPLY_MODE": False,
         "MANUAL_APPROVAL_ENFORCED_V9": True,
         "ZEINEB_VOICE_DEFAULT_V8": True,
-        "BOT_REPLY_FORMAT": "text",
+        "BOT_REPLY_FORMAT": "both",
         "BOT_VOICE_NAME": "ar-TN-ReemNeural",
         "BOT_ENGINEER_NAME": "المهندسة الفلاحية زينب العزيزي",
         "DEFAULT_TEST_PHONE": "21621127147",
         "GEMINI_API_KEY": HARDCODED_GEMINI_API_KEY,
         "BOT_OFFICE_NAME": DEFAULT_BOT_SIGNATURE,
         "BOT_WELCOME_MESSAGE": DEFAULT_WELCOME_MESSAGE,
+        "ENGINEER_CUSTOM_PASSWORD": "",
+        "ENGINEER_CUSTOM_LOGIN": "admin",
         "BOT_CUSTOM_INSTRUCTIONS": (
             "تحدثي بصفتك المهندسة الفلاحية التونسية الخبيرة «زينب العزيزي» بنفس نبرتها الدافئة والعملية بالدارجة التونسية."
         )
@@ -1050,8 +1052,10 @@ class FarmerQuery(BaseModel):
     message_text: str
     image_path: Optional[str] = None
     image_mime: str = "image/jpeg"
+    image_base64: Optional[str] = None
     audio_path: Optional[str] = None
     audio_mime: str = "audio/ogg"
+    audio_base64: Optional[str] = None
     is_media_message: bool = False
     media_type_label: str = ""
     gps_lat: Optional[float] = None
@@ -1166,6 +1170,17 @@ class BrowserMediaTestInput(BaseModel):
     mime_type: str = "image/jpeg"
     caption: str = ""
     send_to_whatsapp: bool = False
+
+
+class EngineerAuthVerifyInput(BaseModel):
+    login: str = "admin"
+    password: str
+
+
+class EngineerAuthChangeInput(BaseModel):
+    login: str = "admin"
+    current_password: str = ""
+    new_password: str
 
 
 REGISTERED_FARMERS_DB: Dict[str, FarmPlotProfile] = {
@@ -1484,13 +1499,62 @@ def detect_crop_from_text(text: str) -> Tuple[Optional[str], Optional[str]]:
     return None, None
 
 
+def analyze_image_with_gemini_or_local(
+    image_path: str,
+    caption_text: str,
+    crop_name: str,
+    farmer_name: str
+) -> Optional[str]:
+    """يفحص الصورة المرفقة عبر Gemini Vision أو الفحص البصري المدمج ويعطي التشخيص بالدارجة التونسية."""
+    if not image_path or not os.path.exists(image_path):
+        return None
+    api_key = get_active_gemini_key()
+    try:
+        with open(image_path, "rb") as f:
+            img_bytes = f.read()
+        if api_key and len(img_bytes) > 100:
+            b64_img = base64.b64encode(img_bytes).decode("utf-8")
+            prompt = (
+                f"أنتِ المهندسة الفلاحية زينب العزيزي. افحصي هذه الصورة الفلاحية التي أرسلها الفلاح ({farmer_name}) "
+                f"بخصوص ({crop_name}) مع الملاحظة: «{caption_text}».\n"
+                "أعطيه التشخيص الدقيق بالدارجة التونسية في 3 نقاط واضحة:\n"
+                "• **تشخيص التصويرة متاعك:** [شنوة يظهر في الورقة أو الكعبة بالضبط]\n"
+                "• **أعمل هذي:** [الخطوة العملية]\n"
+                "• **اشري هذي واستعملها لهذي:** [اسم الدواء أو السماد والجرعة في 100 لتر ماء وبومبا 20 لتر]."
+            )
+            for model_name in ("gemini-2.5-flash", "gemini-2.0-flash"):
+                url = f"https://aiplatform.googleapis.com/v1/publishers/google/models/{model_name}:generateContent?key={api_key}"
+                payload = {
+                    "contents": [{
+                        "role": "user",
+                        "parts": [
+                            {"inlineData": {"mimeType": "image/jpeg", "data": b64_img}},
+                            {"text": prompt}
+                        ]
+                    }],
+                    "generationConfig": {"temperature": 0.15}
+                }
+                resp = requests.post(url, json=payload, timeout=15)
+                if resp.status_code == 200:
+                    cands = resp.json().get("candidates", [])
+                    if cands:
+                        parts = cands[0].get("content", {}).get("parts", [])
+                        txt = "".join(p.get("text", "") for p in parts).strip()
+                        if txt:
+                            return f"📸 *تحليل الصورة المرفقة — المهندسة الفلاحية زينب العزيزي:*\n\n{txt}"
+    except Exception:
+        pass
+    return None
+
+
 def call_gemini_multimodal_agent(query: FarmerQuery) -> Dict[str, Any]:
+    has_image = bool(query.image_path and os.path.exists(query.image_path))
     has_audio = bool(query.audio_path and os.path.exists(query.audio_path))
     voice_transcript: Optional[str] = None
     if has_audio and query.audio_path:
         voice_transcript = transcribe_tunisian_voice_note(query.audio_path)
         if voice_transcript:
-            query.message_text = voice_transcript
+            query.message_text = f"{query.message_text} {voice_transcript}".strip()
 
     clean_msg = str(query.message_text or "").strip()
     norm_msg = normalize_arabic_for_match(clean_msg)
@@ -1519,12 +1583,25 @@ def call_gemini_multimodal_agent(query: FarmerQuery) -> Dict[str, Any]:
     asks_fert = any(w in norm_msg for w in ["تسميد", "سماد", "غبار", "امونيتر", "فوسفور", "بوتاسيوم", "كالسيوم", "تغذيه", "ماكله"])
     asks_water = any(w in norm_msg for w in ["سقي", "نسقي", "ماء", "الري", "قطره", "عطش"])
 
-    voice_header = f"🎙️ *سؤالك الصوتي:* «{voice_transcript}»\n\n" if voice_transcript else ""
+    voice_header = f"🎙️ *مضمون التسجيل الصوتي للفلاح:* «{voice_transcript}»\n\n" if voice_transcript else ""
+    img_header = "📸 *تم إرفاق صورة للفحص البصري*\n" if has_image else ""
+
     reply_blocks: List[str] = [
-        f"{voice_header}مرحبا بيك يا {query.plot.farmer_name} — بخصوص **{specific_crop_key}** متاعك:"
+        f"{voice_header}{img_header}مرحبا بيك يا {query.plot.farmer_name} — بخصوص **{specific_crop_key}** متاعك:"
     ]
 
-    if matched_cards:
+    vision_diag = None
+    if has_image and query.image_path:
+        vision_diag = analyze_image_with_gemini_or_local(
+            query.image_path,
+            clean_msg,
+            specific_crop_key,
+            query.plot.farmer_name
+        )
+
+    if vision_diag:
+        reply_blocks.append(vision_diag)
+    elif matched_cards:
         for card in matched_cards[:2]:
             reply_blocks.append(f"• **المرض متاعك:** {card['diagnosis']}\n{card['action']}")
     elif asks_fert and not asks_water:
@@ -1607,6 +1684,46 @@ def calculate_modernization_roi(audit: ModernizationAuditInput) -> Dict[str, Any
 # =====================================================================
 # 6. الصوت التونسي (TTS) والربط مع Green-API WhatsApp
 # =====================================================================
+def ensure_zeineb_reference_voice_files() -> Tuple[Optional[str], Optional[str]]:
+    """يولّد ملف البصمة الصوتية المرجعية للمهندسة الفلاحية زينب العزيزي (ar-TN-ReemNeural) عند بدء التشغيل."""
+    ogg_ref = os.path.join(MEDIA_DIR_PATH, "zeineb_lazizi_voice_ref.ogg")
+    wav_ref = os.path.join(MEDIA_DIR_PATH, "zeineb_lazizi_voice_ref.wav")
+    mp3_ref = os.path.join(MEDIA_DIR_PATH, "zeineb_lazizi_voice_ref.mp3")
+    if os.path.exists(wav_ref) and os.path.getsize(wav_ref) > 500:
+        return ogg_ref, wav_ref
+    if os.path.exists(mp3_ref) and os.path.getsize(mp3_ref) > 500:
+        return mp3_ref, mp3_ref
+
+    sample_intro = (
+        "مرحبا بيك خويا الفلاح، معاك المهندسة الفلاحية زينب العزيزي من مكتب الدراسات والاستشارات الفلاحية. "
+        "أول حاجة بالنسبة للغراسة متاعك لازم ديما تراقب لإنستالاسيون غوت آ غوت، وتعطي التسميد والغبار والسقيان في وقته الصحيح."
+    )
+    try:
+        subprocess.run(
+            [
+                sys.executable, "-m", "edge_tts",
+                "--voice", "ar-TN-ReemNeural",
+                "--rate=-5%",
+                "--pitch=-1Hz",
+                "--text", sample_intro,
+                "--write-media", mp3_ref
+            ],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=20, check=False
+        )
+        if os.path.exists(mp3_ref) and os.path.getsize(mp3_ref) > 300:
+            o_p, w_p = convert_any_audio_to_ogg_and_wav(mp3_ref)
+            if w_p and os.path.exists(w_p) and w_p != wav_ref:
+                try:
+                    with open(w_p, "rb") as src, open(wav_ref, "wb") as dst:
+                        dst.write(src.read())
+                except Exception:
+                    pass
+            return o_p or mp3_ref, wav_ref if os.path.exists(wav_ref) else mp3_ref
+    except Exception:
+        pass
+    return None, None
+
+
 def clean_text_for_speech(text: str) -> str:
     raw = text or ""
     chars = []
@@ -2109,6 +2226,43 @@ def process_incoming_farmer_message(query: FarmerQuery, send_on_whatsapp: bool =
     cfg = load_saved_config()
     auto_reply_enabled = bool(cfg.get("AUTO_REPLY_MODE", False))
 
+    # فك تشفير وحفظ الصورة المرفقة من بوابة الفلاح إن وجدت
+    if query.image_base64 and not query.image_path:
+        try:
+            raw_b64 = query.image_base64
+            if "," in raw_b64:
+                raw_b64 = raw_b64.split(",", 1)[1]
+            img_bytes = base64.b64decode(raw_b64)
+            if len(img_bytes) > 50:
+                ext = "png" if "png" in (query.image_mime or "").lower() else "jpg"
+                saved_img_path = os.path.join(MEDIA_DIR_PATH, f"portal_img_{uuid.uuid4().hex[:8]}.{ext}")
+                with open(saved_img_path, "wb") as f:
+                    f.write(img_bytes)
+                query.image_path = saved_img_path
+                query.is_media_message = True
+                log_bot_event(f"📸 تم حفظ صورة مرفقة من الفلاح ({query.plot.farmer_name}) بحجم {len(img_bytes)} بايت.")
+        except Exception as e:
+            log_bot_event(f"⚠️ تعذر حفظ الصورة المرفقة: {e}")
+
+    # فك تشفير وحفظ التسجيل الصوتي المرفق من بوابة الفلاح إن وجد
+    if query.audio_base64 and not query.audio_path:
+        try:
+            raw_aud_b64 = query.audio_base64
+            if "," in raw_aud_b64:
+                raw_aud_b64 = raw_aud_b64.split(",", 1)[1]
+            aud_bytes = base64.b64decode(raw_aud_b64)
+            if len(aud_bytes) > 50:
+                mime_low = (query.audio_mime or "").lower()
+                ext = "wav" if "wav" in mime_low else ("mp3" if "mp3" in mime_low or "mpeg" in mime_low else "ogg")
+                saved_aud_path = os.path.join(MEDIA_DIR_PATH, f"portal_voice_{uuid.uuid4().hex[:8]}.{ext}")
+                with open(saved_aud_path, "wb") as f:
+                    f.write(aud_bytes)
+                query.audio_path = saved_aud_path
+                query.is_media_message = True
+                log_bot_event(f"🎙️ تم حفظ تسجيل صوتي مرفق من الفلاح ({query.plot.farmer_name}) بحجم {len(aud_bytes)} بايت.")
+        except Exception as e:
+            log_bot_event(f"⚠️ تعذر حفظ التسجيل الصوتي المرفق: {e}")
+
     result = call_gemini_multimodal_agent(query)
     intent_obj: Dict[str, Any] = result.get("intent", {})
     ticket_id = f"AGRI-{uuid.uuid4().hex[:6].upper()}"
@@ -2132,52 +2286,15 @@ def process_incoming_farmer_message(query: FarmerQuery, send_on_whatsapp: bool =
         img_fname = os.path.basename(query.image_path)
         img_url_val = f"/media/{img_fname}"
         m_type_val = "image"
-    elif query.audio_path and os.path.exists(query.audio_path):
+    if query.audio_path and os.path.exists(query.audio_path):
         aud_fname = os.path.basename(query.audio_path)
         aud_raw_url_val = f"/media/{aud_fname}"
-        wav_fname = f"{aud_fname}.wav"
-        wav_full_path = os.path.join(MEDIA_DIR_PATH, wav_fname)
-        if not os.path.exists(wav_full_path):
-            wav_bytes = convert_ogg_to_wav_bytes(query.audio_path)
-            if wav_bytes:
-                try:
-                    with open(wav_full_path, "wb") as wf:
-                        wf.write(wav_bytes)
-                except Exception:
-                    pass
-        aud_url_val = f"/media/{wav_fname}" if os.path.exists(wav_full_path) else aud_raw_url_val
-        m_type_val = "audio"
-
-    f_lat = float(intent_obj.get("lat", 36.6806))
-    f_lon = float(intent_obj.get("lon", 10.2892))
-    f_exact_gps = bool(intent_obj.get("is_exact_gps", False))
-    f_locality = str(intent_obj.get("locality_name") or query.plot.region)
-    f_area_ha = float(intent_obj.get("area_hectares") or query.plot.area_hectares or 1.5)
-
-    upsert_farmer_on_map(
-        farmer_name=query.plot.farmer_name,
-        phone=query.plot.phone_or_chat_id,
-        region=query.plot.region,
-        locality_name=f_locality,
-        lat=f_lat,
-        lon=f_lon,
-        is_exact_gps=f_exact_gps,
-        crop_category=query.plot.crop_category,
-        crop_variety=query.plot.crop_variety,
-        crop_age_label=query.plot.growth_stage,
-        area_hectares=f_area_ha,
-        last_inquiry=query.message_text
-    )
-
-    item = PendingApprovalItem(
-        ticket_id=ticket_id,
-        created_at=datetime.now().strftime("%H:%M:%S"),
-        farmer_name=query.plot.farmer_name,
-        farmer_chat_id=query.plot.phone_or_chat_id,
-        region=query.plot.region,
-        sector=query.plot.crop_category,
-        crop_variety=query.plot.crop_variety,
-        water_ec=query.plot.water_salinity_ec,
+        ogg_conv, wav_conv = convert_any_audio_to_ogg_and_wav(query.audio_path)
+        if wav_conv and os.path.exists(wav_conv):
+            aud_url_val = f"/media/{os.path.basename(wav_conv)}"
+        else:
+            aud_url_val = aud_raw_url_val
+        m_type_val = "audio" if not img_url_val else "image_and_audio"
         max_ec=guide["max_ec_dsm"],
         temp_c=w.max_temp_c,
         et0_mm=w.et0_fao_mm,
@@ -2234,10 +2351,68 @@ app.add_middleware(
 
 @app.on_event("startup")
 def on_server_startup():
+    ensure_zeineb_reference_voice_files()
     save_config_key("GEMINI_API_KEY", get_active_gemini_key())
     log_bot_event(f"🚀 بدأ تشغيل سيرفر الهندسة الفلاحية ({PUBLIC_SITE_URL}) + تفعيل ساحب رسائل الواتساب الخلفي")
     t = threading.Thread(target=_green_api_polling_worker, daemon=True)
     t.start()
+
+
+@app.get("/api/engineer-auth-status")
+def api_get_engineer_auth_status():
+    """يتحقق مما إذا كان المهندس قد قام بتعيين كلمة سر دائمة خاصة به في السيرفر."""
+    cfg = load_saved_config()
+    saved_pwd = str(cfg.get("ENGINEER_CUSTOM_PASSWORD") or "").strip()
+    saved_login = str(cfg.get("ENGINEER_CUSTOM_LOGIN") or "admin").strip()
+    return {
+        "has_custom_password": bool(saved_pwd),
+        "login": saved_login
+    }
+
+
+@app.post("/api/engineer-auth-verify")
+def api_verify_or_init_engineer_password(inp: EngineerAuthVerifyInput):
+    """يتحقق من كلمة سر المهندس، أو يسجلها ككلمة سر دائمة عند أول إعداد."""
+    cfg = load_saved_config()
+    saved_pwd = str(cfg.get("ENGINEER_CUSTOM_PASSWORD") or "").strip()
+    clean_pwd = str(inp.password or "").strip()
+    clean_login = str(inp.login or "admin").strip() or "admin"
+
+    if not clean_pwd or len(clean_pwd) < 3:
+        return JSONResponse({"ok": False, "error_ar": "⚠️ يرجى إدخال كلمة سر تتكون من 3 أحرف أو أرقام على الأقل."}, status_code=400)
+
+    # إذا لم يتم تعيين كلمة سر دائمة بعد، نحفظ كلمة السر التي أدخلها المهندس الآن لتصبح دائمة
+    if not saved_pwd:
+        save_config_key("ENGINEER_CUSTOM_PASSWORD", clean_pwd)
+        save_config_key("ENGINEER_CUSTOM_LOGIN", clean_login)
+        log_bot_event(f"🔐 تم تعيين وحفظ كلمة السر الدائمة لحساب المهندس ({clean_login}).")
+        return {"ok": True, "initialized": True, "login": clean_login, "note_ar": "✅ تم حفظ كلمة السر الدائمة بنجاح!"}
+
+    if clean_pwd == saved_pwd:
+        return {"ok": True, "initialized": False, "login": clean_login, "note_ar": "🔓 تم التحقق من كلمة السر بنجاح!"}
+
+    return JSONResponse({"ok": False, "error_ar": "❌ كلمة السر غير صحيحة! لا يمكن الدخول بدون كلمة السر المسجلة."}, status_code=401)
+
+
+@app.post("/api/engineer-auth-change")
+def api_change_engineer_password(inp: EngineerAuthChangeInput):
+    """يغيّر كلمة السر الدائمة للمهندس بعد التثبت من كلمة السر الحالية."""
+    cfg = load_saved_config()
+    saved_pwd = str(cfg.get("ENGINEER_CUSTOM_PASSWORD") or "").strip()
+    curr_pwd = str(inp.current_password or "").strip()
+    new_pwd = str(inp.new_password or "").strip()
+    clean_login = str(inp.login or "admin").strip() or "admin"
+
+    if not new_pwd or len(new_pwd) < 3:
+        return JSONResponse({"ok": False, "error_ar": "⚠️ كلمة السر الجديدة يجب أن تكون 3 أحرف أو أرقام على الأقل."}, status_code=400)
+
+    if saved_pwd and curr_pwd != saved_pwd:
+        return JSONResponse({"ok": False, "error_ar": "❌ كلمة السر الحالية غير صحيحة!"}, status_code=401)
+
+    save_config_key("ENGINEER_CUSTOM_PASSWORD", new_pwd)
+    save_config_key("ENGINEER_CUSTOM_LOGIN", clean_login)
+    log_bot_event(f"🔑 تم تحديث كلمة السر الدائمة للمهندس ({clean_login}).")
+    return {"ok": True, "login": clean_login, "note_ar": "✅ تم تغيير وحفظ كلمة السر الدائمة بنجاح!"}
 
 
 @app.post("/api/poll-whatsapp-now")
@@ -2301,8 +2476,13 @@ def serve_draw_parcel_redirect():
 @app.get("/media/{filename}")
 def serve_saved_media_file(filename: str):
     safe_name = os.path.basename(filename)
+    if "zeineb_lazizi" in safe_name:
+        ensure_zeineb_reference_voice_files()
     target_path = os.path.join(MEDIA_DIR_PATH, safe_name)
     if not os.path.exists(target_path) and safe_name.endswith(".wav"):
+        mp3_fallback = os.path.join(MEDIA_DIR_PATH, safe_name[:-4] + ".mp3")
+        if os.path.exists(mp3_fallback):
+            return FileResponse(mp3_fallback, media_type="audio/mpeg")
         orig_path = os.path.join(MEDIA_DIR_PATH, safe_name[:-4])
         if os.path.exists(orig_path):
             wav_bytes = convert_ogg_to_wav_bytes(orig_path)
@@ -2315,7 +2495,7 @@ def serve_saved_media_file(filename: str):
     if not os.path.exists(target_path):
         return PlainTextResponse("File not found", status_code=404)
     lower = safe_name.lower()
-    mtype = "audio/wav" if lower.endswith(".wav") else ("audio/ogg" if lower.endswith(".ogg") else ("image/png" if lower.endswith(".png") else "image/jpeg"))
+    mtype = "audio/wav" if lower.endswith(".wav") else ("audio/mpeg" if lower.endswith(".mp3") else ("audio/ogg" if lower.endswith(".ogg") else ("image/png" if lower.endswith(".png") else "image/jpeg")))
     return FileResponse(target_path, media_type=mtype)
 
 
