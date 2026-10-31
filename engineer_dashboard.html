@@ -10,104 +10,125 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <style>
     :root {
-      --royal-bg-deep: #021811;
-      --royal-bg-mid: #04281d;
-      --royal-panel: #063527;
-      --gold-bright: #fde047;
-      --gold-main: #f59e0b;
-      --gold-metallic: #d4af37;
-      --ivory-text: #fefce8;
+      --olive-bg-light: #eef4e6;
+      --olive-bg-soft: #e2ecd6;
+      --olive-panel: #f7faf3;
+      --olive-header: #486836;
+      --olive-header-dark: #354f27;
+      --olive-border: #8ba876;
+      --gold-main: #d4af37;
+      --text-dark-olive: #1d2e14;
+      --text-mid-olive: #355226;
     }
     body {
       font-family: 'Cairo', sans-serif;
-      background-color: var(--royal-bg-deep) !important;
+      background-color: var(--olive-bg-light) !important;
       background-image:
-        radial-gradient(circle at 15% 15%, rgba(212, 175, 55, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.12) 0%, transparent 45%),
-        linear-gradient(160deg, #021610 0%, #052c20 50%, #021811 100%) !important;
-      color: var(--ivory-text) !important;
+        radial-gradient(circle at 15% 15%, rgba(122, 160, 95, 0.18) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(212, 175, 55, 0.12) 0%, transparent 45%),
+        linear-gradient(160deg, #f3f8ed 0%, #e3eed7 50%, #ebf3e1 100%) !important;
+      color: var(--text-dark-olive) !important;
     }
     .custom-scroll::-webkit-scrollbar {
       width: 7px;
       height: 7px;
     }
     .custom-scroll::-webkit-scrollbar-track {
-      background: #021811;
+      background: #e2ecd6;
     }
     .custom-scroll::-webkit-scrollbar-thumb {
-      background: linear-gradient(180deg, #f59e0b, #b45309);
+      background: linear-gradient(180deg, #688f50, #486836);
       border-radius: 9999px;
     }
     .pro-header-bg {
-      background: linear-gradient(135deg, #01140e 0%, #052e22 50%, #083c2d 100%) !important;
-      border-bottom: 2.5px solid #d4af37 !important;
-      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65) !important;
+      background: linear-gradient(135deg, #3b582b 0%, #4e713b 55%, #5c8246 100%) !important;
+      border-bottom: 3px solid #d4af37 !important;
+      box-shadow: 0 6px 20px rgba(53, 79, 39, 0.28) !important;
     }
     .lux-panel {
-      background: linear-gradient(145deg, #063527 0%, #04241a 100%) !important;
-      border: 1.5px solid rgba(212, 175, 55, 0.45) !important;
-      box-shadow: 0 10px 28px -6px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(253, 230, 138, 0.18) !important;
-      color: #fefce8 !important;
+      background: linear-gradient(145deg, #f8fbf4 0%, #eaf2e0 100%) !important;
+      border: 1.5px solid #95b280 !important;
+      box-shadow: 0 6px 18px -4px rgba(58, 85, 42, 0.14) !important;
+      color: #1d2e14 !important;
     }
     .lux-gold-badge {
-      background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #b45309 100%) !important;
-      color: #021811 !important;
+      background: linear-gradient(135deg, #fef08a 0%, #f59e0b 55%, #d97706 100%) !important;
+      color: #1d2e14 !important;
       border: 1px solid #fef9c3 !important;
-      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35) !important;
+      box-shadow: 0 3px 10px rgba(217, 119, 6, 0.25) !important;
     }
     .lux-emerald-btn {
-      background: linear-gradient(135deg, #059669 0%, #064e3b 100%) !important;
-      color: #fefce8 !important;
+      background: linear-gradient(135deg, #5c8246 0%, #3d5b2d 100%) !important;
+      color: #ffffff !important;
       border: 1.5px solid #d4af37 !important;
     }
     .lux-emerald-btn:hover {
-      background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important;
+      background: linear-gradient(135deg, #6b9452 0%, #486836 100%) !important;
     }
     .lux-table-head {
-      background: linear-gradient(90deg, #021811 0%, #07402f 50%, #021811 100%) !important;
+      background: linear-gradient(90deg, #3b582b 0%, #4f733c 50%, #3b582b 100%) !important;
+      color: #fefce8 !important;
     }
     main .bg-white,
     section.bg-white,
     #engineerLockModal .bg-white {
-      background: linear-gradient(145deg, #063527 0%, #04241a 100%) !important;
-      border-color: rgba(212, 175, 55, 0.42) !important;
-      color: #fefce8 !important;
+      background: linear-gradient(145deg, #fafcf7 0%, #edf4e5 100%) !important;
+      border-color: #95b280 !important;
+      color: #1d2e14 !important;
     }
     main .bg-slate-50,
     main .bg-slate-100,
+    main .bg-slate-900,
+    main .bg-slate-950,
+    main .bg-slate-950\/80,
+    main .bg-slate-950\/90,
+    main .bg-emerald-950,
+    main .bg-emerald-950\/90,
+    main .bg-emerald-950\/80,
     main .bg-emerald-50,
     main .bg-emerald-50\/70,
     main .bg-sky-50,
     main .bg-amber-50,
     main .bg-amber-50\/70,
     #engineerLockModal .bg-slate-50 {
-      background: rgba(3, 30, 22, 0.82) !important;
-      border-color: rgba(212, 175, 55, 0.35) !important;
-      color: #fefce8 !important;
+      background: #e4eed9 !important;
+      border-color: #8ba876 !important;
+      color: #1d2e14 !important;
     }
     main .text-slate-900,
     main .text-slate-800,
+    main .text-white,
+    main .text-amber-300,
+    main .text-amber-200,
     main .text-emerald-950,
     main .text-sky-950,
     main .text-amber-950,
-    #engineerLockModal .text-slate-900 {
-      color: #fde68a !important;
+    #engineerLockModal .text-slate-900,
+    #engineerLockModal .text-amber-300 {
+      color: #233819 !important;
     }
     main .text-slate-700,
     main .text-slate-600,
     main .text-slate-500,
-    #engineerLockModal .text-slate-700,
-    #engineerLockModal .text-slate-600,
-    #engineerLockModal .text-slate-500 {
-      color: #a7f3d0 !important;
+    main .text-slate-400,
+    main .text-emerald-200,
+    main .text-emerald-300,
+    main .text-sky-300,
+    #engineerLockModal .text-emerald-200 {
+      color: #3b582b !important;
     }
-    main input:not([type="checkbox"]),
+    main input:not([type="checkbox"]):not([type="file"]),
     main select,
     main textarea,
     #engineerLockModal input:not([type="checkbox"]) {
-      background-color: #021811 !important;
-      border: 1.5px solid rgba(212, 175, 55, 0.55) !important;
-      color: #fefce8 !important;
+      background-color: #ffffff !important;
+      border: 1.5px solid #7c9c67 !important;
+      color: #1d2e14 !important;
+    }
+    main input::placeholder,
+    main textarea::placeholder,
+    #engineerLockModal input::placeholder {
+      color: #6c875a !important;
     }
     .farmer-map-pin {
       width: 28px;
@@ -139,9 +160,9 @@
       cursor: grab;
     }
     .edge-midpoint-handle {
-      background: rgba(2, 24, 17, 0.92);
+      background: rgba(59, 88, 43, 0.95);
       color: #fde047;
-      border: 1.5px solid #10b981;
+      border: 1.5px solid #ffffff;
       border-radius: 9999px;
       padding: 0px 5px;
       font-size: 9px;
@@ -160,79 +181,86 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <!-- ==================== بوابة الدخول الموحدة (Login & Mot de passe) للمهندس والفلاح ==================== -->
-  <div id="engineerLockModal" class="fixed inset-0 z-[9999] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="max-w-md w-full bg-white rounded-3xl shadow-2xl border border-amber-500/50 p-6 sm:p-8 space-y-5">
+  <!-- ==================== بوابة الحماية الصارمة (Strict Security Gate & Persistent Password) ==================== -->
+  <div id="engineerLockModal" class="fixed inset-0 z-[9999] bg-[#2c4021]/95 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-2xl border-2 border-[#7c9c67] p-6 sm:p-8 space-y-5">
       <div class="text-center space-y-2">
         <div class="w-14 h-14 rounded-2xl lux-gold-badge mx-auto flex items-center justify-center shadow">
-          <span class="text-2xl">🔐</span>
+          <span class="text-2xl">🔒</span>
         </div>
-        <h2 class="text-xl font-black text-amber-300">
-          بوابة الدخول — الهندسة والاستشارات الفلاحية
+        <h2 class="text-xl font-black text-slate-900">
+          حماية فضاء المهندس الفلاحي
         </h2>
-        <p class="text-xs text-emerald-200 font-semibold">
-          أدخل اسم المستخدم وكلمة السر للدخول إلى صفحة المهندس أو صفحة الفلاح
+        <p id="lockModalSubtitle" class="text-xs text-emerald-200 font-bold">
+          الدخول محمي بكلمة سر خاصة — لا يُسمح بالدخول إلا بعد إدخال كلمة السر المسجلة
         </p>
       </div>
 
+      <!-- نموذج الدخول / التسجيل الدائم لكلمة السر -->
       <div id="lockLoginForm" class="space-y-3.5">
-        <div>
-          <label class="block text-xs font-bold mb-1">اسم المستخدم (Login):</label>
-          <input id="engineerLoginInput" type="text" value="admin" placeholder="اسم المستخدم..." class="w-full rounded-xl px-4 py-2 text-sm font-bold outline-none" />
+        <div id="firstTimeSetupBanner" class="hidden bg-amber-50 border border-amber-400 rounded-xl p-3 text-xs font-bold text-amber-950">
+          ✨ <strong>إعداد كلمة السر الدائمة لأول مرة:</strong> أدخل كلمة السر التي تريد اعتمادها دائماً لحماية لوحة المهندس، وستبقى مسجلة دائماً في السيرفر والمتصفح.
         </div>
+
         <div>
-          <label class="block text-xs font-bold mb-1 flex items-center justify-between">
-            <span>كلمة السر (Mot de passe):</span>
-            <button type="button" onclick="showChangePasswordSection(true)" class="text-[11px] font-extrabold text-amber-300 hover:underline">
-              ⚙️ تغيير كلمة السر؟
+          <label class="block text-xs font-extrabold mb-1">اسم المستخدم (Login):</label>
+          <input id="engineerLoginInput" type="text" value="admin" autocomplete="username" placeholder="اسم المستخدم..." class="w-full rounded-xl px-4 py-2.5 text-sm font-bold outline-none" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold mb-1 flex items-center justify-between">
+            <span id="pwdFieldLabel">كلمة السر (Mot de passe) *:</span>
+            <button type="button" onclick="showChangePasswordSection(true)" class="text-[11px] font-extrabold underline">
+              ⚙️ تغيير كلمة السر المسجلة؟
             </button>
           </label>
           <div class="relative">
-            <input id="engineerPasswordInput" type="password" value="1234" placeholder="أدخل كلمة السر..." class="w-full rounded-xl px-4 py-2.5 text-sm font-mono font-bold outline-none" />
-            <button type="button" onclick="togglePasswordVisibility()" class="absolute left-3 top-2.5 text-amber-300 text-xs font-bold">
+            <input id="engineerPasswordInput" type="password" value="" autocomplete="current-password" onkeydown="if(event.key==='Enter') handleEngineerUnlock();" placeholder="أدخل كلمة السر الخاصة بك..." class="w-full rounded-xl px-4 py-2.5 text-sm font-mono font-bold outline-none" />
+            <button type="button" onclick="togglePasswordVisibility()" class="absolute left-3 top-2.5 text-xs font-bold">
               👁️ عرض
             </button>
           </div>
-          <p id="lockErrorMsg" class="hidden text-[11px] font-bold text-rose-400 mt-1">⚠️ كلمة السر غير صحيحة، حاول مجدداً (الافتراضية: 1234).</p>
+          <p id="lockErrorMsg" class="hidden text-xs font-extrabold text-rose-700 mt-1.5 bg-rose-100 border border-rose-300 rounded-lg px-3 py-1.5">
+            ❌ كلمة السر غير صحيحة! لا يمكن الدخول بدون كلمة السر المسجلة.
+          </p>
         </div>
 
-        <div class="flex items-center justify-between text-xs">
-          <label class="flex items-center gap-2 cursor-pointer font-semibold">
-            <input id="chkRememberEngineer" type="checkbox" checked class="rounded text-emerald-600" />
-            <span>تذكّر الجلسة</span>
-          </label>
-          <span class="text-[11px] text-amber-300 font-mono font-bold">كلمة السر الافتراضية: 1234</span>
+        <div id="firstTimeConfirmBox" class="hidden">
+          <label class="block text-xs font-extrabold mb-1">تأكيد كلمة السر الدائمة *:</label>
+          <input id="engineerPasswordConfirmInit" type="password" value="" onkeydown="if(event.key==='Enter') handleEngineerUnlock();" placeholder="أعد كتابة كلمة السر لتأكيد حفظها دائماً..." class="w-full rounded-xl px-4 py-2.5 text-sm font-mono font-bold outline-none" />
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-          <button type="button" onclick="handleEngineerUnlock()" class="py-3 px-3 rounded-xl font-black text-xs lux-gold-badge shadow-md transition flex items-center justify-center gap-1.5">
-            <span>👨‍🔬 دخول لصفحة المهندس</span>
+        <div class="pt-2 space-y-2">
+          <button type="button" onclick="handleEngineerUnlock()" id="btnUnlockSubmit" class="w-full py-3 px-4 rounded-xl font-black text-xs lux-emerald-btn shadow-md transition flex items-center justify-center gap-2">
+            <span>🔓 تحقق من كلمة السر والدخول للوحة المهندس</span>
           </button>
-          <a href="farmer_portal.html" class="py-3 px-3 rounded-xl font-extrabold text-xs lux-emerald-btn shadow-md transition flex items-center justify-center gap-1.5 text-center">
-            <span>🌾 دخول لصفحة الفلاح</span>
+          <a href="farmer_portal.html" class="w-full py-2.5 px-4 rounded-xl font-black text-xs lux-gold-badge shadow-sm transition flex items-center justify-center gap-1.5 text-center">
+            <span>🌾 الذهاب إلى بوابة الفلاح (Farmer Portal)</span>
           </a>
         </div>
       </div>
 
-      <!-- نموذج تغيير كلمة السر -->
-      <div id="lockChangePasswordForm" class="hidden space-y-3 bg-slate-50 p-4 rounded-2xl border border-amber-500/40">
-        <div class="flex items-center justify-between border-b border-amber-500/30 pb-2">
-          <span class="text-xs font-black text-amber-300">🔑 تغيير كلمة سر المهندس:</span>
-          <button type="button" onclick="showChangePasswordSection(false)" class="text-[11px] text-amber-200 font-bold">إلغاء ✕</button>
+      <!-- نموذج تغيير كلمة السر الدائمة -->
+      <div id="lockChangePasswordForm" class="hidden space-y-3 bg-slate-50 p-4 rounded-2xl border border-[#7c9c67]">
+        <div class="flex items-center justify-between border-b border-[#8ba876] pb-2">
+          <span class="text-xs font-black">🔑 تغيير كلمة السر الدائمة:</span>
+          <button type="button" onclick="showChangePasswordSection(false)" class="text-[11px] font-bold">إلغاء ✕</button>
         </div>
-        <input id="pwdCurrentInput" type="password" placeholder="كلمة السر الحالية..." class="w-full rounded-lg px-3 py-1.5 text-xs font-mono font-bold" />
-        <input id="pwdNewInput" type="password" placeholder="كلمة السر الجديدة..." class="w-full rounded-lg px-3 py-1.5 text-xs font-mono font-bold" />
-        <input id="pwdConfirmInput" type="password" placeholder="تأكيد كلمة السر الجديدة..." class="w-full rounded-lg px-3 py-1.5 text-xs font-mono font-bold" />
+        <input id="pwdCurrentInput" type="password" placeholder="أدخل كلمة السر الحالية..." class="w-full rounded-lg px-3 py-2 text-xs font-mono font-bold" />
+        <input id="pwdNewInput" type="password" placeholder="أدخل كلمة السر الجديدة (تبقى مسجلة دائماً)..." class="w-full rounded-lg px-3 py-2 text-xs font-mono font-bold" />
+        <input id="pwdConfirmInput" type="password" placeholder="تأكيد كلمة السر الجديدة..." class="w-full rounded-lg px-3 py-2 text-xs font-mono font-bold" />
         <p id="pwdChangeMsg" class="hidden text-[11px] font-bold"></p>
         <div class="flex items-center gap-2 pt-1">
-          <button type="button" onclick="saveNewEngineerPassword()" class="flex-1 py-2 rounded-xl text-xs font-black lux-gold-badge">حفظ ✓</button>
-          <button type="button" onclick="resetToDefaultPassword()" class="py-2 px-3 rounded-xl text-xs font-bold bg-slate-800 text-amber-200">استرجاع 1234</button>
+          <button type="button" onclick="saveNewEngineerPassword()" class="flex-1 py-2.5 rounded-xl text-xs font-black lux-emerald-btn">حفظ كلمة السر الجديدة دائماً ✓</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ==================== الهيدر الملكي ==================== -->
+  <!-- ==================== حاوية التطبيق المحمية (لا تظهر إلا بعد إدخال كلمة السر الصحيحة) ==================== -->
+  <div id="protectedAppWrapper" class="hidden min-h-screen flex flex-col">
+
+  <!-- ==================== الهيدر الزيتوني ==================== -->
   <header class="pro-header-bg text-white sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-3 py-2 flex flex-wrap items-center justify-between gap-2">
       <div class="flex items-center gap-2.5">
@@ -480,10 +508,31 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs font-extrabold">🎙️ صيغة رد البوت (المهندسة زينب العزيزي):</span>
+          <select id="selectBotReplyFormat" onchange="saveBotReplyFormat()" class="text-xs font-bold rounded-xl px-2.5 py-1.5">
+            <option value="both" selected>📝+🔊 نص + أوديو المهندسة زينب العزيزي معاً</option>
+            <option value="voice">🔊 تسجيل صوتي فقط (بصوت المهندسة زينب)</option>
+            <option value="text">📝 نص مكتوب فقط</option>
+          </select>
           <label for="directMediaInput" class="cursor-pointer lux-gold-badge font-black text-xs px-3 py-1.5 rounded-xl shadow-sm transition">
             <span>📸 فحص صورة أو 🎙️ تسجيل صوتي</span>
             <input id="directMediaInput" type="file" accept="image/*,audio/*" class="hidden" />
           </label>
+        </div>
+
+        <!-- شريط البصمة الصوتية للمهندسة الفلاحية زينب العزيزي -->
+        <div class="w-full pt-2.5 mt-1 border-t border-[#8ba876] flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-black lux-gold-badge">🎙️ البصمة الصوتية المعتمدة</span>
+            <span class="font-extrabold">المهندسة الفلاحية زينب العزيزي (صوت تونسي نسائي `ar-TN-ReemNeural`)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-bold">استمع للمرجع الصوتي للمهندسة زينب:</span>
+            <audio id="zeinebRefAudioPlayer" controls preload="none" class="h-8 w-60 rounded-lg">
+              <source src="/media/zeineb_lazizi_voice_ref.wav" type="audio/wav" />
+              <source src="/media/zeineb_lazizi_voice_ref.mp3" type="audio/mpeg" />
+            </audio>
+          </div>
         </div>
       </div>
 
@@ -553,8 +602,25 @@
     </div>
 
   </main>
+  </div> <!-- نهاية حاوية التطبيق المحمية #protectedAppWrapper -->
 
-  <div id="toastBanner" class="fixed bottom-4 left-4 z-50 hidden bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-lg border border-emerald-500 flex items-center gap-2 max-w-md">
+  <!-- نافذة تكبير الصور المرفقة بالحجم الكامل (Image Lightbox) -->
+  <div id="imageLightboxModal" class="hidden fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4" onclick="closeImageLightbox()">
+    <div class="relative max-w-4xl w-full bg-[#f7faf3] rounded-2xl overflow-hidden shadow-2xl border-2 border-[#7c9c67] p-3" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between pb-2 mb-2 border-b border-[#8ba876]">
+        <span id="lightboxCaption" class="text-xs font-extrabold">📸 معاينة صورة الفلاح المرفقة بالحجم الكامل</span>
+        <div class="flex items-center gap-2">
+          <a id="lightboxDownloadLink" href="#" target="_blank" download="farmer_photo.jpg" class="lux-emerald-btn text-xs font-bold px-3 py-1 rounded-lg">⬇️ فتح / تحميل الصورة</a>
+          <button type="button" onclick="closeImageLightbox()" class="bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold px-3 py-1 rounded-lg">✖ إغلاق</button>
+        </div>
+      </div>
+      <div class="flex items-center justify-center max-h-[80vh] overflow-auto bg-black rounded-xl">
+        <img id="lightboxImage" src="" alt="صورة الفلاح" class="max-h-[78vh] w-auto object-contain rounded-lg" />
+      </div>
+    </div>
+  </div>
+
+  <div id="toastBanner" class="fixed bottom-4 left-4 z-50 hidden bg-[#354f27] text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-lg border-2 border-[#d4af37] flex items-center gap-2 max-w-md">
     <span id="toastText">تمت العملية بنجاح</span>
   </div>
 
@@ -701,41 +767,150 @@
       if (navFdb) navFdb.textContent = String(farmersMapData.length);
     }
 
-    // ==================== مصادقة المهندس وكلمة السر ====================
-    function getEngineerActivePassword() {
-      return localStorage.getItem("agri_engineer_custom_password") || "1234";
+    function openImageLightbox(url, caption) {
+      const modal = document.getElementById("imageLightboxModal");
+      const img = document.getElementById("lightboxImage");
+      const cap = document.getElementById("lightboxCaption");
+      const dl = document.getElementById("lightboxDownloadLink");
+      if (!modal || !img) return;
+      img.src = url;
+      if (cap) cap.textContent = caption || "📸 معاينة صورة الفلاح المرفقة بالحجم الكامل";
+      if (dl) dl.href = url;
+      modal.classList.remove("hidden");
     }
 
-    function checkEngineerAuth() {
+    function closeImageLightbox() {
+      const modal = document.getElementById("imageLightboxModal");
+      if (modal) modal.classList.add("hidden");
+      const img = document.getElementById("lightboxImage");
+      if (img) img.src = "";
+    }
+
+    let engMediaRecorder = null;
+    let engAudioChunks = [];
+    let engRecordedBase64 = null;
+    let engRecordedMime = "audio/webm";
+    let isFirstTimePasswordSetup = false;
+
+    // ==================== الحماية الصارمة وكلمة السر الدائمة (Strict Security & Persistent Password) ====================
+    function getEngineerSavedPasswordLocal() {
+      return localStorage.getItem("agri_engineer_custom_password") || "";
+    }
+
+    async function checkEngineerAuth() {
       const modal = document.getElementById("engineerLockModal");
-      const isUnlocked = sessionStorage.getItem("agri_engineer_unlocked") === "1" || localStorage.getItem("agri_engineer_remember") === "1";
-      if (isUnlocked && modal) {
-        modal.classList.add("hidden");
-      } else if (modal) {
-        modal.classList.remove("hidden");
+      const appWrap = document.getElementById("protectedAppWrapper");
+      const inp = document.getElementById("engineerPasswordInput");
+      if (inp) inp.value = ""; // لا نضع أبداً كلمة سر افتراضية مكتوبة مسبقاً!
+
+      const isSessionUnlocked = sessionStorage.getItem("agri_engineer_unlocked_strict") === "1";
+      let serverHasPwd = false;
+      try {
+        const resp = await fetch(`${API_BASE}/api/engineer-auth-status`);
+        if (resp.ok) {
+          const st = await resp.json();
+          serverHasPwd = Boolean(st.has_custom_password);
+          if (st.login && document.getElementById("engineerLoginInput")) {
+            document.getElementById("engineerLoginInput").value = st.login;
+          }
+        }
+      } catch (e) {}
+
+      const localHasPwd = Boolean(getEngineerSavedPasswordLocal());
+      isFirstTimePasswordSetup = (!serverHasPwd && !localHasPwd);
+
+      const banner = document.getElementById("firstTimeSetupBanner");
+      const confBox = document.getElementById("firstTimeConfirmBox");
+      const btnSub = document.getElementById("btnUnlockSubmit");
+      const lblPwd = document.getElementById("pwdFieldLabel");
+
+      if (isFirstTimePasswordSetup) {
+        if (banner) banner.classList.remove("hidden");
+        if (confBox) confBox.classList.remove("hidden");
+        if (lblPwd) lblPwd.textContent = "اختر كلمة السر الدائمة الخاصة بك *:";
+        if (btnSub) btnSub.innerHTML = "<span>🔐 حفظ كلمة السر الدائمة والدخول للوحة المهندس</span>";
+      } else {
+        if (banner) banner.classList.add("hidden");
+        if (confBox) confBox.classList.add("hidden");
+        if (lblPwd) lblPwd.textContent = "كلمة السر (Mot de passe) *:";
+        if (btnSub) btnSub.innerHTML = "<span>🔓 تحقق من كلمة السر والدخول للوحة المهندس</span>";
+      }
+
+      if (isSessionUnlocked && (serverHasPwd || localHasPwd)) {
+        if (modal) modal.classList.add("hidden");
+        if (appWrap) appWrap.classList.remove("hidden");
+      } else {
+        if (modal) modal.classList.remove("hidden");
+        if (appWrap) appWrap.classList.add("hidden");
+        setTimeout(() => { if (inp) inp.focus(); }, 100);
       }
     }
 
-    function handleEngineerUnlock() {
+    async function handleEngineerUnlock() {
+      const loginVal = (document.getElementById("engineerLoginInput")?.value || "admin").trim() || "admin";
       const inp = document.getElementById("engineerPasswordInput");
+      const confInit = document.getElementById("engineerPasswordConfirmInit");
       const err = document.getElementById("lockErrorMsg");
-      const chk = document.getElementById("chkRememberEngineer");
       const modal = document.getElementById("engineerLockModal");
+      const appWrap = document.getElementById("protectedAppWrapper");
       const pwd = (inp ? inp.value : "").trim();
-      const activePwd = getEngineerActivePassword();
 
-      if (pwd === activePwd || pwd === "1234" || pwd === "admin") {
-        sessionStorage.setItem("agri_engineer_unlocked", "1");
-        if (chk && chk.checked) localStorage.setItem("agri_engineer_remember", "1");
+      if (!pwd || pwd.length < 3) {
+        if (err) {
+          err.textContent = "⚠️ يرجى إدخال كلمة سر تتكون من 3 أحرف أو أرقام على الأقل!";
+          err.classList.remove("hidden");
+        }
+        return;
+      }
+
+      if (isFirstTimePasswordSetup) {
+        const confVal = (confInit ? confInit.value : "").trim();
+        if (pwd !== confVal) {
+          if (err) {
+            err.textContent = "⚠️ كلمة السر وتأكيدها غير متطابقين!";
+            err.classList.remove("hidden");
+          }
+          return;
+        }
+      }
+
+      // التحقق أو الحفظ الدائم في السيرفر
+      let verifiedByServer = false;
+      let serverResponded = false;
+      try {
+        const resp = await fetch(`${API_BASE}/api/engineer-auth-verify`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ login: loginVal, password: pwd })
+        });
+        serverResponded = true;
+        if (resp.ok) {
+          verifiedByServer = true;
+        }
+      } catch (e) {}
+
+      const savedLocal = getEngineerSavedPasswordLocal();
+      const verifiedLocally = isFirstTimePasswordSetup ? true : (savedLocal && pwd === savedLocal);
+
+      if (verifiedByServer || (!serverResponded && verifiedLocally)) {
+        localStorage.setItem("agri_engineer_custom_password", pwd);
+        localStorage.setItem("agri_engineer_custom_login", loginVal);
+        sessionStorage.setItem("agri_engineer_unlocked_strict", "1");
+        isFirstTimePasswordSetup = false;
         if (err) err.classList.add("hidden");
         if (modal) modal.classList.add("hidden");
-        showToast("🔓 مرحباً بك في لوحة تحكم المهندس الفلاحي!");
+        if (appWrap) appWrap.classList.remove("hidden");
+        showToast("🔓 تم التحقق من كلمة السر بنجاح — مرحباً بك في فضاء المهندس!");
         setTimeout(() => {
           initTunisiaLeafletMap();
           if (tunisiaMapInstance) tunisiaMapInstance.invalidateSize();
         }, 120);
       } else {
-        if (err) err.classList.remove("hidden");
+        if (err) {
+          err.textContent = "❌ كلمة السر غير صحيحة! لا يمكن الدخول بدون كلمة السر المسجلة.";
+          err.classList.remove("hidden");
+        }
+        showToast("❌ كلمة السر خاطئة!");
       }
     }
 
@@ -745,14 +920,20 @@
     }
 
     function lockEngineerDashboard() {
-      sessionStorage.removeItem("agri_engineer_unlocked");
-      localStorage.removeItem("agri_engineer_remember");
+      sessionStorage.removeItem("agri_engineer_unlocked_strict");
+      const inp = document.getElementById("engineerPasswordInput");
+      if (inp) inp.value = "";
+      document.getElementById("protectedAppWrapper")?.classList.add("hidden");
       document.getElementById("engineerLockModal")?.classList.remove("hidden");
+      checkEngineerAuth();
+      showToast("🔒 تم قفل لوحة المهندس بكلمة السر.");
     }
 
     function showChangePasswordSection(show) {
       document.getElementById("lockLoginForm")?.classList.toggle("hidden", show);
       document.getElementById("lockChangePasswordForm")?.classList.toggle("hidden", !show);
+      const msg = document.getElementById("pwdChangeMsg");
+      if (msg) msg.classList.add("hidden");
     }
 
     function openPasswordModalDirectly() {
@@ -760,22 +941,73 @@
       showChangePasswordSection(true);
     }
 
-    function saveNewEngineerPassword() {
+    async function saveNewEngineerPassword() {
+      const loginVal = (document.getElementById("engineerLoginInput")?.value || "admin").trim() || "admin";
+      const currP = (document.getElementById("pwdCurrentInput")?.value || "").trim();
       const newP = (document.getElementById("pwdNewInput")?.value || "").trim();
       const conf = (document.getElementById("pwdConfirmInput")?.value || "").trim();
-      if (newP && newP === conf) {
-        localStorage.setItem("agri_engineer_custom_password", newP);
-        showToast("🔑 تم حفظ كلمة السر الجديدة!");
-        showChangePasswordSection(false);
-      } else {
-        showToast("⚠️ تأكد من تطابق كلمة السر الجديدة!");
+      const msg = document.getElementById("pwdChangeMsg");
+
+      if (!newP || newP.length < 3) {
+        if (msg) {
+          msg.textContent = "⚠️ كلمة السر الجديدة يجب أن تكون 3 أحرف أو أرقام على الأقل.";
+          msg.className = "text-[11px] font-extrabold text-rose-700";
+          msg.classList.remove("hidden");
+        }
+        return;
       }
+      if (newP !== conf) {
+        if (msg) {
+          msg.textContent = "⚠️ كلمة السر الجديدة وتأكيدها غير متطابقين!";
+          msg.className = "text-[11px] font-extrabold text-rose-700";
+          msg.classList.remove("hidden");
+        }
+        return;
+      }
+
+      try {
+        const resp = await fetch(`${API_BASE}/api/engineer-auth-change`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ login: loginVal, current_password: currP, new_password: newP })
+        });
+        if (!resp.ok) {
+          const errData = await resp.json().catch(() => ({}));
+          if (msg) {
+            msg.textContent = errData.error_ar || "❌ كلمة السر الحالية غير صحيحة!";
+            msg.className = "text-[11px] font-extrabold text-rose-700";
+            msg.classList.remove("hidden");
+          }
+          return;
+        }
+      } catch (e) {
+        const savedLocal = getEngineerSavedPasswordLocal();
+        if (savedLocal && currP !== savedLocal) {
+          if (msg) {
+            msg.textContent = "❌ كلمة السر الحالية غير صحيحة!";
+            msg.className = "text-[11px] font-extrabold text-rose-700";
+            msg.classList.remove("hidden");
+          }
+          return;
+        }
+      }
+
+      localStorage.setItem("agri_engineer_custom_password", newP);
+      showToast("🔑 تم حفظ كلمة السر الدائمة الجديدة بنجاح!");
+      showChangePasswordSection(false);
+      checkEngineerAuth();
     }
 
-    function resetToDefaultPassword() {
-      localStorage.removeItem("agri_engineer_custom_password");
-      showToast("🔄 تم استرجاع كلمة السر الافتراضية 1234");
-      showChangePasswordSection(false);
+    async function saveBotReplyFormat() {
+      const fmt = document.getElementById("selectBotReplyFormat")?.value || "both";
+      try {
+        await fetch(`${API_BASE}/api/whatsapp-config`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ bot_reply_format: fmt })
+        });
+        showToast("✅ تم حفظ صيغة رد البوت (المهندسة زينب العزيزي)!");
+      } catch (e) {}
     }
 
     // ==================== المزامنة مع بوابة الفلاح والسيرفر السحابي ====================
@@ -788,6 +1020,8 @@
             const tid = st.id || st.ticket_id;
             if (!tid) return;
             const existing = ticketsData.find(t => t.id === tid);
+            const imgVal = st.imageUrl || st.image_url || st.image_base64 || null;
+            const audVal = st.audioUrl || st.audio_url || st.audio_base64 || null;
             if (!existing) {
               ticketsData.unshift({
                 id: tid,
@@ -801,256 +1035,25 @@
                 deliveryNote: st.deliveryNote || st.delivery_note || "⏳ وصلت من بوابة الفلاح — بانتظار مصادقتك",
                 farmerMessage: st.farmerMessage || st.farmer_message || "",
                 aiResponse: st.aiResponse || st.ai_draft_response || "",
+                imageUrl: imgVal ? resolveMediaUrl(imgVal) : null,
+                audioUrl: audVal ? resolveMediaUrl(audVal) : null,
+                audioRawUrl: audVal ? resolveMediaUrl(audVal) : null,
                 lat: st.lat || 36.6806,
                 lon: st.lon || 10.2892,
                 isExactGps: Boolean(st.isExactGps || st.is_exact_gps)
               });
               selectedTicketId = tid;
               changed = true;
+            } else {
+              if (!existing.imageUrl && imgVal) { existing.imageUrl = resolveMediaUrl(imgVal); changed = true; }
+              if (!existing.audioUrl && audVal) { existing.audioUrl = resolveMediaUrl(audVal); changed = true; }
             }
           });
         }
       } catch (e) {}
       return changed;
     }
-
-    function updateSharedTicketStatusInBrowser(ticketId, statusStr, approvedText, deliveryNoteStr) {
-      try {
-        let sharedList = JSON.parse(localStorage.getItem("agri_shared_tickets_db") || "[]");
-        if (!Array.isArray(sharedList)) sharedList = [];
-        const idx = sharedList.findIndex(t => (t.id || t.ticket_id) === ticketId);
-        if (idx >= 0) {
-          sharedList[idx].status = statusStr;
-          sharedList[idx].aiResponse = approvedText;
-          sharedList[idx].ai_draft_response = approvedText;
-          sharedList[idx].deliveryNote = deliveryNoteStr;
-          sharedList[idx].delivery_note = deliveryNoteStr;
-        } else {
-          const curT = ticketsData.find(t => t.id === ticketId);
-          if (curT) {
-            sharedList.unshift({
-              id: curT.id,
-              ticket_id: curT.id,
-              farmerName: curT.farmerName,
-              phone: curT.phone,
-              region: curT.region,
-              sector: curT.sector,
-              cropVariety: curT.cropVariety,
-              status: statusStr,
-              farmerMessage: curT.farmerMessage,
-              aiResponse: approvedText,
-              ai_draft_response: approvedText,
-              deliveryNote: deliveryNoteStr
-            });
-          }
-        }
-        localStorage.setItem("agri_shared_tickets_db", JSON.stringify(sharedList));
-      } catch (e) {}
-    }
-
-    async function syncTicketsAndLogsFromServer() {
-      const localChanged = syncTicketsFromSharedBrowserStorage();
-      if (localChanged) {
-        updateKpis();
-        renderTicketsList();
-        renderTicketDetail();
-      }
-      try {
-        const [respTickets, respLogs, respMap] = await Promise.all([
-          fetch(`${API_BASE}/api/tickets`),
-          fetch(`${API_BASE}/api/logs`),
-          fetch(`${API_BASE}/api/farmers-map`)
-        ]);
-
-        if (respMap && respMap.ok) {
-          const mapJson = await respMap.json();
-          if (Array.isArray(mapJson.farmers) && mapJson.farmers.length > 0) {
-            farmersMapData = mapJson.farmers;
-            updateKpis();
-            renderFarmersDatabaseTable();
-            renderTunisiaMapMarkersAndList();
-          }
-        }
-
-        if (respLogs && respLogs.ok) {
-          const logData = await respLogs.json();
-          const logLine = document.getElementById("waLatestLogLine");
-          const checkTime = document.getElementById("waLastCheckTime");
-          if (logLine && Array.isArray(logData.logs) && logData.logs.length > 0) {
-            logLine.textContent = logData.logs[0];
-          }
-          if (checkTime && logData.bot_status?.last_check) {
-            checkTime.textContent = `آخر فحص: ${logData.bot_status.last_check}`;
-          }
-        }
-
-        if (respTickets && respTickets.ok) {
-          const serverList = await respTickets.json();
-          if (Array.isArray(serverList) && serverList.length > 0) {
-            let changed = false;
-            const chronological = [...serverList].reverse();
-            chronological.forEach(st => {
-              const existing = ticketsData.find(t => t.id === st.ticket_id);
-              if (!existing) {
-                ticketsData.unshift({
-                  id: st.ticket_id,
-                  farmerName: st.farmer_name,
-                  phone: st.farmer_chat_id,
-                  region: st.region,
-                  sector: st.sector || "خضروات",
-                  cropVariety: st.crop_variety,
-                  createdAt: st.created_at || "الآن",
-                  status: st.status || "PENDING",
-                  deliveryNote: st.delivery_note || "⏳ بانتظار مصادقتك",
-                  farmerMessage: st.farmer_message,
-                  aiResponse: st.ai_draft_response,
-                  imageUrl: resolveMediaUrl(st.image_url),
-                  audioUrl: resolveMediaUrl(st.audio_url),
-                  audioRawUrl: resolveMediaUrl(st.audio_raw_url),
-                  lat: st.lat || 36.6806,
-                  lon: st.lon || 10.2892
-                });
-                selectedTicketId = st.ticket_id;
-                changed = true;
-              }
-            });
-            if (changed) {
-              updateKpis();
-              renderTicketsList();
-              renderTicketDetail();
-              showToast("📩 وصلت رسالة جديدة من الفلاح إلى قسم الاستشارات!");
-            }
-          }
-        }
-      } catch (e) {}
-    }
-
-    // ==================== إعدادات وسحب رسائل الواتساب ====================
-    function toggleWaSetupPanel() {
-      document.getElementById("waSetupCollapsible")?.classList.toggle("hidden");
-    }
-
-    async function pollWhatsAppMessagesNow() {
-      showToast("🔄 جاري فحص وسحب رسائل الواتساب من Green-API...");
-      try {
-        const resp = await fetch(`${API_BASE}/api/poll-whatsapp-now`, { method: "POST" });
-        if (resp.ok) {
-          const data = await resp.json();
-          await syncTicketsAndLogsFromServer();
-          showToast(data.note_ar || "✅ تم فحص الواتساب بنجاح!");
-          return;
-        }
-      } catch (e) {}
-      showToast("⚠️ تأكد من إدخال idInstance و apiTokenInstance في إعدادات Green-API.");
-    }
-
-    async function saveAndVerifyGreenApiKeys() {
-      const gid = (document.getElementById("waInputGreenId")?.value || "").trim();
-      const gtok = (document.getElementById("waInputGreenToken")?.value || "").trim();
-      const resBox = document.getElementById("waVerifyResultBox");
-      if (!gid || !gtok) {
-        showToast("⚠️ أدخل كلاً من idInstance و apiTokenInstance أولاً!");
-        return;
-      }
-      if (resBox) resBox.textContent = "⏳ جاري الاتصال بـ Green-API وتفعيل الاستقبال...";
-      try {
-        const resp = await fetch(`${API_BASE}/api/whatsapp-config`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            green_api_instance_id: gid,
-            green_api_token: gtok,
-            auto_reply_mode: false
-          })
-        });
-        if (resp.ok) {
-          const data = await resp.json();
-          const diagNote = data.green_diagnostic?.note_ar || "✅ تم الحفظ!";
-          if (resBox) resBox.textContent = diagNote;
-          showToast(diagNote);
-          await loadBotConfigFromServer();
-          await pollWhatsAppMessagesNow();
-        }
-      } catch (e) {}
-    }
-
-    async function quickSimulateIncomingWhatsApp() {
-      const sampleText = "عندي زياتين في عقارب صفاقس عمرها 12 سنة لاحظت دوائر كحلة وصفراء على الورق وكأنه عين الطاووس، شنوة الدواء والجرعة؟";
-      try {
-        const resp = await fetch(`${API_BASE}/api/simulate-incoming-whatsapp`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            phone: "+21621127147",
-            farmer_name: "فلاح عبر واتساب",
-            message_text: sampleText
-          })
-        });
-        if (resp.ok) {
-          await syncTicketsAndLogsFromServer();
-          document.getElementById("tabBtnQueue")?.click();
-          showToast("📩✅ وصلت الرسالة التجريبية لقسم الاستشارات وبانتظار مصادقتك!");
-          return;
-        }
-      } catch (e) {}
-    }
-
-    async function setBotApprovalMode(isAuto) {
-      const btnManual = document.getElementById("btnModeManual");
-      const btnAuto = document.getElementById("btnModeAuto");
-      if (btnManual && btnAuto) {
-        btnManual.className = !isAuto
-          ? "px-3 py-1 rounded-lg text-xs font-extrabold bg-amber-500 text-slate-950 shadow-sm transition"
-          : "px-3 py-1 rounded-lg text-xs font-bold text-emerald-200 transition";
-        btnAuto.className = isAuto
-          ? "px-3 py-1 rounded-lg text-xs font-extrabold bg-emerald-600 text-white shadow-sm transition"
-          : "px-3 py-1 rounded-lg text-xs font-bold text-emerald-200 transition";
-      }
-      try {
-        await fetch(`${API_BASE}/api/whatsapp-config`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ auto_reply_mode: isAuto })
-        });
-        showToast(isAuto ? "🤖 تم تفعيل الرد الأوتوماتيكي" : "✋ تم تفعيل المراجعة والمصادقة اليدوية قبل الإرسال!");
-      } catch (e) {}
-    }
-
-    async function loadBotConfigFromServer() {
-      try {
-        const resp = await fetch(`${API_BASE}/api/whatsapp-config`);
-        if (!resp.ok) return;
-        const cfg = await resp.json();
-        const gidInp = document.getElementById("waInputGreenId");
-        const gtokInp = document.getElementById("waInputGreenToken");
-        if (gidInp && cfg.green_api_instance_id) gidInp.value = cfg.green_api_instance_id;
-        if (gtokInp && cfg.green_api_token) gtokInp.value = cfg.green_api_token;
-
-        const pill = document.getElementById("waLiveStatePill");
-        const detail = document.getElementById("waLiveDetailText");
-        const setupPanel = document.getElementById("waSetupCollapsible");
-        if (pill) {
-          if (cfg.has_green_api) {
-            const st = cfg.green_diagnostic?.state || "authorized";
-            if (st === "authorized") {
-              pill.className = "px-3 py-0.5 rounded-full text-xs font-black lux-gold-badge";
-              pill.textContent = `🟢 مربوط ونشط (Instance: ${cfg.green_api_instance_id})`;
-              if (detail) detail.textContent = cfg.green_diagnostic?.note_ar || "";
-            } else {
-              pill.className = "px-3 py-0.5 rounded-full text-xs font-black bg-amber-500 text-slate-950";
-              pill.textContent = `🟠 حالة الحساب: ${st}`;
-              if (setupPanel) setupPanel.classList.remove("hidden");
-            }
-          } else {
-            pill.className = "px-3 py-0.5 rounded-full text-xs font-black bg-rose-600 text-white";
-            pill.textContent = "⚠️ غير مربوط (أدخل idInstance و apiTokenInstance)";
-            if (setupPanel) setupPanel.classList.remove("hidden");
-          }
-        }
-      } catch (e) {}
-    }
-
-    // ==================== عرض ومصادقة التذاكر ====================
+    // ==================== عرض ومصادقة التذاكر (مع عرض الصور وتشغيل الأوديو وتوليد صوت المهندسة زينب العزيزي) ====================
     function renderTicketsList() {
       const container = document.getElementById("ticketsListContainer");
       if (!container) return;
@@ -1064,23 +1067,29 @@
       }
       container.innerHTML = filtered.map(t => {
         const isSelected = t.id === selectedTicketId;
-        const borderClass = isSelected ? "border-2 border-amber-400" : "border border-slate-700";
+        const borderClass = isSelected ? "border-2 border-[#486836] ring-2 ring-[#8ba876]" : "border border-[#95b280]";
         const isPending = t.status === "PENDING";
         const statusBadge = isPending
           ? `<span class="px-2 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-400 text-slate-950">⏳ بانتظار مصادقتك</span>`
-          : `<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-400 text-slate-950">✅ تمت المصادقة</span>`;
+          : `<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-600 text-white">✅ تمت المصادقة</span>`;
+
+        const mediaBadges = `
+          ${t.imageUrl ? `<div class="mt-1.5 bg-[#e4eed9] border border-[#7c9c67] rounded-lg px-2.5 py-1 text-[11px] font-extrabold flex items-center justify-between"><span>📸 صورة مرفقة من الفلاح</span><span class="underline">انقر لمعاينة الصورة 🔍</span></div>` : ""}
+          ${t.audioUrl ? `<div class="mt-1.5 bg-amber-100 border border-amber-400 rounded-lg px-2.5 py-1 text-[11px] font-extrabold flex items-center justify-between"><span>🎙️ تسجيل صوتي مرفق من الفلاح</span><span class="underline">انقر للاستماع ▶️</span></div>` : ""}
+        `;
 
         return `
           <div class="ticket-card cursor-pointer rounded-xl p-3.5 shadow-sm transition bg-white ${borderClass}" data-id="${t.id}">
             <div class="flex items-center justify-between gap-2 mb-1.5">
-              <span class="font-bold text-sm text-amber-300">${t.farmerName} • <span class="text-emerald-300 text-xs">${t.region}</span></span>
+              <span class="font-extrabold text-sm">${t.farmerName} • <span class="text-xs">${t.region}</span></span>
               ${statusBadge}
             </div>
-            <p class="text-xs font-semibold text-emerald-200 mb-1.5">${t.cropVariety}</p>
-            <p class="text-xs bg-slate-50 p-2 rounded-lg border border-slate-700">"${t.farmerMessage}"</p>
-            <div class="flex items-center justify-between mt-2 text-[11px] font-semibold">
+            <p class="text-xs font-bold mb-1.5">🌿 ${t.cropVariety}</p>
+            ${mediaBadges}
+            <p class="text-xs bg-slate-50 p-2 rounded-lg border border-[#8ba876] mt-1.5">"${t.farmerMessage}"</p>
+            <div class="flex items-center justify-between mt-2 text-[11px] font-bold">
               <span>${t.deliveryNote || ""}</span>
-              <span class="text-emerald-400">${t.createdAt}</span>
+              <span>${t.createdAt}</span>
             </div>
           </div>
         `;
@@ -1089,9 +1098,298 @@
       container.querySelectorAll(".ticket-card").forEach(card => {
         card.addEventListener("click", () => {
           selectedTicketId = card.getAttribute("data-id");
+          engRecordedBase64 = null;
           renderTicketsList();
           renderTicketDetail();
         });
+      });
+    }
+
+    function renderTicketDetail() {
+      const container = document.getElementById("ticketDetailCard");
+      const ticket = ticketsData.find(t => t.id === selectedTicketId);
+      if (!container || !ticket) return;
+
+      container.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex flex-wrap items-start justify-between gap-2 border-b border-[#8ba876] pb-3">
+            <div>
+              <span class="text-xs font-mono bg-[#e4eed9] px-2 py-0.5 rounded font-bold">${ticket.id}</span>
+              <h2 class="text-lg font-black mt-1">${ticket.farmerName} (${ticket.region})</h2>
+              <p class="text-xs font-bold">${ticket.cropVariety} • هاتف الفلاح: <span dir="ltr" class="font-mono font-black">${ticket.phone}</span></p>
+            </div>
+            <button type="button" onclick="focusFarmerOnMapFromTicket('${ticket.id}')" class="lux-emerald-btn text-[11px] font-extrabold px-3 py-1.5 rounded-lg">
+              🗺️ عرض الضيعة على الخريطة
+            </button>
+          </div>
+
+          <!-- رسالة الفلاح + عرض الصورة المرفقة + مشغل الأوديو المرفق -->
+          <div class="bg-slate-50 border border-[#8ba876] rounded-xl p-3.5 space-y-3">
+            <p class="text-xs font-extrabold">📩 رسالة / صورة / أوديو الفلاح الوارد:</p>
+            <p class="text-xs leading-relaxed font-bold bg-white p-2.5 rounded-lg border border-[#95b280]">"${ticket.farmerMessage}"</p>
+
+            ${ticket.imageUrl ? `
+              <div class="bg-white border-2 border-[#5c8246] rounded-xl p-3 space-y-2">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <span class="text-xs font-black">📸 الصورة المرفقة من الفلاح:</span>
+                  <div class="flex items-center gap-2">
+                    <button type="button" onclick="openImageLightbox('${ticket.imageUrl}', '📸 صورة ${ticket.farmerName} (${ticket.cropVariety})')" class="lux-emerald-btn text-[11px] font-bold px-3 py-1 rounded-lg">
+                      🔍 تكبير الصورة بالحجم الكامل
+                    </button>
+                    <a href="${ticket.imageUrl}" target="_blank" download="farmer_image.jpg" class="lux-gold-badge text-[11px] font-bold px-2.5 py-1 rounded-lg">
+                      ⬇️ تحميل الصورة
+                    </a>
+                  </div>
+                </div>
+                <div class="bg-[#1d2e14] rounded-xl overflow-hidden flex items-center justify-center max-h-72 cursor-pointer" onclick="openImageLightbox('${ticket.imageUrl}', '📸 صورة ${ticket.farmerName} (${ticket.cropVariety})')">
+                  <img src="${ticket.imageUrl}" alt="صورة الفلاح المرفقة" class="max-h-72 w-auto object-contain" />
+                </div>
+              </div>
+            ` : ""}
+
+            ${ticket.audioUrl ? `
+              <div class="bg-white border-2 border-amber-500 rounded-xl p-3.5 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-black">🎙️ استمع إلى التسجيل الصوتي المرسل من الفلاح:</span>
+                  <a href="${ticket.audioUrl}" target="_blank" download="farmer_voice.wav" class="lux-gold-badge text-[11px] font-bold px-3 py-1 rounded-lg">
+                    ⬇️ تحميل الأوديو
+                  </a>
+                </div>
+                <audio controls preload="metadata" class="w-full h-10">
+                  <source src="${ticket.audioUrl}" type="audio/wav" />
+                  <source src="${ticket.audioRawUrl || ticket.audioUrl}" type="audio/ogg" />
+                  <source src="${ticket.audioUrl}" type="audio/webm" />
+                  متصفحك لا يدعم تشغيل الصوت المباشر.
+                </audio>
+              </div>
+            ` : ""}
+          </div>
+
+          <!-- مراجعة وتعديل النص المقترح -->
+          <div class="space-y-2">
+            <label for="editorAiResponse" class="block text-xs font-extrabold">✏️ 1. راجع وعدّل التشخيص والوصفة قبل المصادقة (أو اكتب النص ليولّده البوت بصوت المهندسة زينب العزيزي):</label>
+            <textarea id="editorAiResponse" rows="7" class="w-full text-xs leading-relaxed rounded-xl p-3.5 font-bold">${ticket.aiResponse}</textarea>
+          </div>
+
+          <!-- توليد وسماع أوديو البوت (بصوت المهندسة زينب العزيزي) قبل الإرسال + أزرار المصادقة -->
+          <div class="bg-slate-50 border border-[#7c9c67] rounded-xl p-3.5 space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="text-xs font-black">🔊 2. توليد وسماع أوديو البوت (بصوت المهندسة الفلاحية زينب العزيزي) قبل إرساله:</span>
+              <button id="btnPreviewBotVoice" type="button" class="lux-gold-badge font-black text-xs py-1.5 px-3.5 rounded-xl shadow-sm transition">
+                ▶️ توليد وسماع أوديو البوت الآن قبل الإرسال
+              </button>
+            </div>
+
+            <div id="botVoicePreviewBox" class="${ticket.botVoiceUrl ? '' : 'hidden'} bg-white border-2 border-[#5c8246] rounded-xl p-3 space-y-1.5">
+              <p class="text-xs font-black">🎧 معاينة التسجيل الصوتي المولّد بصوت المهندسة زينب العزيزي (جاهز للإرسال):</p>
+              <audio id="botVoicePreviewAudio" controls src="${ticket.botVoiceUrl || ''}" class="w-full h-10"></audio>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+              <button id="btnApproveSendText" type="button" class="lux-emerald-btn font-extrabold text-xs py-2.5 px-3 rounded-xl shadow transition">
+                ✅ مصادقة وإرسال كنص مكتوب 📝
+              </button>
+              <button id="btnApproveSendBotVoice" type="button" class="lux-gold-badge font-black text-xs py-2.5 px-3 rounded-xl shadow transition">
+                🔊 توليد أوديو المهندسة زينب وإرساله صوتياً
+              </button>
+              <button id="btnApproveSendBoth" type="button" class="bg-[#2d4620] hover:bg-[#1d2e14] text-white font-extrabold text-xs py-2.5 px-3 rounded-xl shadow transition">
+                📝+🔊 إرسال النص + أوديو البوت معاً
+              </button>
+            </div>
+          </div>
+
+          <!-- تسجيل صوت المهندس مباشرة من الميكروفون وإرساله للفلاح -->
+          <div class="bg-slate-50 border-2 border-amber-500/70 rounded-xl p-3.5 space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h3 class="text-xs font-black">🎙️ 3. أو جاوب الفلاح بتسجيل صوتي بصوتك أنت مباشرة من الميكروفون:</h3>
+                <p class="text-[11px] font-semibold">سجّل نصيحتك بصوتك، استمع إليها، ثم أرسلها للفلاح بضغطة زر</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button id="btnStartEngRec" type="button" class="bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs py-2 px-3.5 rounded-xl shadow-sm transition">
+                  🔴 ابدأ تسجيل صوتك
+                </button>
+                <button id="btnStopEngRec" type="button" class="hidden bg-slate-900 text-white font-extrabold text-xs py-2 px-3.5 rounded-xl shadow-sm transition">
+                  ⏹️ إيقاف التسجيل
+                </button>
+              </div>
+            </div>
+
+            <div id="engRecStatusText" class="hidden text-xs font-extrabold text-rose-700 animate-pulse">
+              🎙️ جاري التسجيل من الميكروفون... تكلم الآن ثم اضغط «⏹️ إيقاف التسجيل»
+            </div>
+
+            <div id="engRecordedPreviewBox" class="hidden bg-white border border-amber-400 rounded-xl p-3 space-y-2">
+              <p class="text-xs font-extrabold">🎧 استمع لتسجيلك الصوتي قبل إرساله للفلاح:</p>
+              <audio id="engRecordedAudioPlayer" controls class="w-full h-10"></audio>
+              <button id="btnSendEngVoiceToFarmer" type="button" class="w-full lux-gold-badge font-black text-xs py-2.5 px-4 rounded-xl shadow transition">
+                📤 مصادقة وإرسال تسجيلي الصوتي إلى الفلاح (${ticket.phone})
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // 1. توليد وسماع أوديو البوت (بصوت المهندسة زينب العزيزي) قبل إرساله
+      document.getElementById("btnPreviewBotVoice")?.addEventListener("click", async () => {
+        const updatedText = document.getElementById("editorAiResponse").value;
+        ticket.aiResponse = updatedText;
+        showToast("🔊 جاري توليد التسجيل الصوتي بصوت المهندسة الفلاحية زينب العزيزي...");
+        try {
+          const resp = await fetch(`${API_BASE}/api/preview-bot-voice`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: updatedText, voice_name: "ar-TN-ReemNeural" })
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data.ok && data.play_url) {
+              const fullPlayUrl = resolveMediaUrl(data.play_url);
+              ticket.botVoiceUrl = fullPlayUrl;
+              const pBox = document.getElementById("botVoicePreviewBox");
+              const pAud = document.getElementById("botVoicePreviewAudio");
+              if (pBox && pAud) {
+                pAud.src = fullPlayUrl;
+                pBox.classList.remove("hidden");
+                pAud.play().catch(() => {});
+              }
+              showToast(data.note_ar || "🔊 تم توليد أوديو المهندسة زينب — استمع إليه الآن قبل الإرسال!");
+              return;
+            }
+          }
+        } catch (e) {}
+        showToast("⚠️ تعذر توليد الصوت حالياً.");
+      });
+
+      // 2. دالة المصادقة والإرسال (نص / أوديو البوت / الاثنان معاً)
+      async function handleApprove(mode) {
+        const updatedText = document.getElementById("editorAiResponse").value;
+        ticket.aiResponse = updatedText;
+        ticket.status = "APPROVED";
+        ticket.deliveryNote = mode === "bot_voice"
+          ? "🔊✅ تمت المصادقة وإرسال أوديو المهندسة زينب للفلاح"
+          : (mode === "both" ? "📝+🔊 تمت المصادقة وإرسال النص وأوديو المهندسة زينب" : "✅ تمت المصادقة والإرسال من المهندس");
+
+        showToast("⏳ جاري توليد وإرسال الرد المعتمد للفلاح...");
+        try {
+          const resp = await fetch(`${API_BASE}/api/approve-and-send`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ticket_id: ticket.id,
+              edited_response: updatedText,
+              to_phone: ticket.phone,
+              send_mode: mode,
+              voice_name: "ar-TN-ReemNeural"
+            })
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            ticket.deliveryNote = data.note_ar || ticket.deliveryNote;
+            if (data.bot_voice_url) {
+              const fullVoiceUrl = resolveMediaUrl(data.bot_voice_url);
+              ticket.botVoiceUrl = fullVoiceUrl;
+              const pBox = document.getElementById("botVoicePreviewBox");
+              const pAud = document.getElementById("botVoicePreviewAudio");
+              if (pBox && pAud) {
+                pAud.src = fullVoiceUrl;
+                pBox.classList.remove("hidden");
+              }
+            }
+            updateSharedTicketStatusInBrowser(ticket.id, "APPROVED", updatedText, ticket.deliveryNote, ticket.botVoiceUrl);
+            renderTicketsList();
+            showToast(data.note_ar || "✅ تمت المصادقة والإرسال بنجاح!");
+            return;
+          }
+        } catch (e) {}
+        updateSharedTicketStatusInBrowser(ticket.id, "APPROVED", updatedText, ticket.deliveryNote, ticket.botVoiceUrl);
+        renderTicketsList();
+        showToast("✅ تمت المصادقة وحفظ الإجابة في بوابة الفلاح!");
+      }
+
+      document.getElementById("btnApproveSendText")?.addEventListener("click", () => handleApprove("text"));
+      document.getElementById("btnApproveSendBotVoice")?.addEventListener("click", () => handleApprove("bot_voice"));
+      document.getElementById("btnApproveSendBoth")?.addEventListener("click", () => handleApprove("both"));
+
+      // 3. تسجيل صوت المهندس مباشرة من الميكروفون
+      const btnStart = document.getElementById("btnStartEngRec");
+      const btnStop = document.getElementById("btnStopEngRec");
+      const statusTxt = document.getElementById("engRecStatusText");
+      const previewBox = document.getElementById("engRecordedPreviewBox");
+      const audioPlayer = document.getElementById("engRecordedAudioPlayer");
+
+      btnStart?.addEventListener("click", async () => {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          showToast("⚠️ متصفحك لا يدعم التسجيل المباشر من الميكروفون.");
+          return;
+        }
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          engAudioChunks = [];
+          engMediaRecorder = new MediaRecorder(stream);
+          engRecordedMime = engMediaRecorder.mimeType || "audio/webm";
+          engMediaRecorder.ondataavailable = (e) => {
+            if (e.data && e.data.size > 0) engAudioChunks.push(e.data);
+          };
+          engMediaRecorder.onstop = () => {
+            stream.getTracks().forEach(t => t.stop());
+            const blob = new Blob(engAudioChunks, { type: engRecordedMime });
+            audioPlayer.src = URL.createObjectURL(blob);
+            previewBox.classList.remove("hidden");
+            const reader = new FileReader();
+            reader.onloadend = () => { engRecordedBase64 = reader.result; };
+            reader.readAsDataURL(blob);
+          };
+          engMediaRecorder.start();
+          btnStart.classList.add("hidden");
+          btnStop.classList.remove("hidden");
+          statusTxt.classList.remove("hidden");
+        } catch (err) {
+          showToast("⚠️ يرجى السماح للمتصفح باستعمال الميكروفون!");
+        }
+      });
+
+      btnStop?.addEventListener("click", () => {
+        if (engMediaRecorder && engMediaRecorder.state !== "inactive") {
+          engMediaRecorder.stop();
+        }
+        btnStop.classList.add("hidden");
+        btnStart.classList.remove("hidden");
+        btnStart.textContent = "🔄 إعادة تسجيل صوتك";
+        statusTxt.classList.add("hidden");
+      });
+
+      document.getElementById("btnSendEngVoiceToFarmer")?.addEventListener("click", async () => {
+        if (!engRecordedBase64) {
+          showToast("⚠️ سجّل صوتك أولاً!");
+          return;
+        }
+        showToast("📤 جاري إرسال تسجيلك الصوتي إلى الفلاح...");
+        try {
+          const resp = await fetch(`${API_BASE}/api/send-engineer-voice`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ticket_id: ticket.id,
+              to_phone: ticket.phone,
+              audio_base64: engRecordedBase64,
+              mime_type: engRecordedMime
+            })
+          });
+          if (resp.ok) {
+            const data = await resp.json();
+            ticket.status = "APPROVED";
+            ticket.deliveryNote = data.note_ar || "🎙️✅ تم الرد بتسجيل صوتي بصوت المهندس";
+            if (data.play_url) ticket.botVoiceUrl = resolveMediaUrl(data.play_url);
+            updateSharedTicketStatusInBrowser(ticket.id, "APPROVED", ticket.aiResponse, ticket.deliveryNote, ticket.botVoiceUrl);
+            renderTicketsList();
+            showToast(data.note_ar || "🎙️✅ تم إرسال تسجيلك الصوتي إلى الفلاح!");
+            return;
+          }
+        } catch (e) {}
+        updateSharedTicketStatusInBrowser(ticket.id, "APPROVED", ticket.aiResponse, "🎙️✅ تم الرد بتسجيل صوتي بصوت المهندس", engRecordedBase64);
+        renderTicketsList();
+        showToast("🎙️✅ تم حفظ وإرسال تسجيلك الصوتي إلى بوابة الفلاح!");
       });
     }
 
@@ -1492,39 +1790,39 @@
       const locality = document.getElementById("mapInputLocality")?.value.trim() || "مرناق - بن عروس";
       const cropAge = document.getElementById("mapInputCropAge")?.value.trim() || "طور الإنتاج";
       const latRaw = parseFloat(document.getElementById("mapInputLat")?.value || "36.6806");
-      const lonRaw = parseFloat(document.getElementById("mapInputLon")?.value || "10.2892");
-      const metrics = computeGeodesicPolygonMetrics(drawnPolygonPoints);
-
-      const payload = {
-        farmer_name: farmerName,
-        phone: phone,
-        region: locality,
-        locality_name: locality,
-        crop_category: cropCategory,
-        crop_variety: cropVariety,
-        crop_age_label: cropAge,
-        lat: drawnPolygonPoints.length >= 3 ? metrics.cLat : latRaw,
-        lon: drawnPolygonPoints.length >= 3 ? metrics.cLon : lonRaw,
-        is_exact_gps: true,
-        polygon_points: drawnPolygonPoints.length >= 3 ? drawnPolygonPoints : null,
-        area_hectares: drawnPolygonPoints.length >= 3 ? Number(metrics.ha.toFixed(3)) : 2.0
-      };
-
+    function updateSharedTicketStatusInBrowser(ticketId, statusStr, approvedText, deliveryNoteStr, voiceUrl = null) {
       try {
-        const resp = await fetch(`${API_BASE}/api/farmers-map`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-        if (resp.ok) {
-          const data = await resp.json();
-          if (Array.isArray(data.farmers)) farmersMapData = data.farmers;
-          clearAllMapMeasurements();
-          renderTunisiaMapMarkersAndList();
-          renderFarmersDatabaseTable();
-          showToast(`📍✅ تم حفظ ضيعة (${farmerName}) على الخريطة!`);
-          return;
+        let sharedList = JSON.parse(localStorage.getItem("agri_shared_tickets_db") || "[]");
+        if (!Array.isArray(sharedList)) sharedList = [];
+        const idx = sharedList.findIndex(t => (t.id || t.ticket_id) === ticketId);
+        if (idx >= 0) {
+          sharedList[idx].status = statusStr;
+          sharedList[idx].aiResponse = approvedText;
+          sharedList[idx].ai_draft_response = approvedText;
+          sharedList[idx].deliveryNote = deliveryNoteStr;
+          sharedList[idx].delivery_note = deliveryNoteStr;
+          if (voiceUrl) sharedList[idx].botVoiceUrl = voiceUrl;
+        } else {
+          const curT = ticketsData.find(t => t.id === ticketId);
+          if (curT) {
+            sharedList.unshift({
+              id: curT.id,
+              ticket_id: curT.id,
+              farmerName: curT.farmerName,
+              phone: curT.phone,
+              region: curT.region,
+              sector: curT.sector,
+              cropVariety: curT.cropVariety,
+              status: statusStr,
+              farmerMessage: curT.farmerMessage,
+              aiResponse: approvedText,
+              ai_draft_response: approvedText,
+              deliveryNote: deliveryNoteStr,
+              botVoiceUrl: voiceUrl || null
+            });
+          }
         }
+        localStorage.setItem("agri_shared_tickets_db", JSON.stringify(sharedList));
       } catch (e) {}
     }
 
@@ -1660,10 +1958,10 @@
         btn.addEventListener("click", () => {
           currentSectorFilter = btn.getAttribute("data-sector");
           renderTicketsList();
-          renderTicketDetail();
-        });
-      });
-
+      const zeinebAud = document.getElementById("zeinebRefAudioPlayer");
+      if (zeinebAud) {
+        zeinebAud.src = `${API_BASE}/media/zeineb_lazizi_voice_ref.wav`;
+      }
       checkEngineerAuth();
       syncTicketsFromSharedBrowserStorage();
       updateKpis();
