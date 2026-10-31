@@ -998,6 +998,249 @@
       checkEngineerAuth();
     }
 
+    function updateApprovalModeButtons(isAuto) {
+      const btnManual = document.getElementById("btnModeManual");
+      const btnAuto = document.getElementById("btnModeAuto");
+      if (!btnManual || !btnAuto) return;
+      if (!isAuto) {
+        btnManual.className = "px-3 py-1 rounded-lg text-xs font-extrabold bg-amber-500 text-slate-950 shadow-sm transition";
+        btnManual.textContent = "✋ مراجعة ومصادقة يدوية قبل الإرسال (مفعّل)";
+        btnAuto.className = "px-3 py-1 rounded-lg text-xs font-bold text-emerald-200 transition";
+        btnAuto.textContent = "🤖 رد أوتوماتيكي فوري";
+      } else {
+        btnAuto.className = "px-3 py-1 rounded-lg text-xs font-extrabold bg-emerald-600 text-white shadow-sm transition";
+        btnAuto.textContent = "🤖 رد أوتوماتيكي فوري (مفعّل)";
+        btnManual.className = "px-3 py-1 rounded-lg text-xs font-bold text-emerald-200 transition";
+        btnManual.textContent = "✋ مراجعة ومصادقة يدوية قبل الإرسال";
+      }
+    }
+
+    async function setBotApprovalMode(isAuto) {
+      updateApprovalModeButtons(isAuto);
+      try {
+        await fetch(`${API_BASE}/api/whatsapp-config`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ auto_reply_mode: isAuto })
+        });
+        showToast(isAuto ? "🤖 تم تفعيل الرد الأوتوماتيكي الفوري" : "✋ تم تفعيل وضع المراجعة والمصادقة اليدوية قبل الإرسال!");
+      } catch (e) {}
+    }
+
+    function toggleWaSetupPanel() {
+      document.getElementById("waSetupCollapsible")?.classList.toggle("hidden");
+    }
+
+    async function saveAndVerifyGreenApiKeys() {
+      const gid = (document.getElementById("waInputGreenId")?.value || "").trim();
+      const gtok = (document.getElementById("waInputGreenToken")?.value || "").trim();
+      const resBox = document.getElementById("waVerifyResultBox");
+      if (!gid || !gtok) {
+        showToast("⚠️ أدخل كلاً من idInstance و apiTokenInstance أولاً!");
+        return;
+      }
+      if (resBox) resBox.textContent = "⏳ جاري الاتصال بـ Green-API وتفعيل استقبال رسائل الواتساب...";
+      try {
+        const resp = await fetch(`${API_BASE}/api/whatsapp-config`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            green_api_instance_id: gid,
+            green_api_token: gtok,
+            auto_reply_mode: false
+          })
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          const diagNote = data.green_diagnostic?.note_ar || "✅ تم حفظ وتفعيل مفاتيح Green-API بنجاح!";
+          if (resBox) resBox.textContent = diagNote;
+          showToast(diagNote);
+          await loadBotConfigFromServer();
+          await pollWhatsAppMessagesNow();
+        }
+      } catch (e) {
+        if (resBox) resBox.textContent = "⚠️ تعذر الاتصال بالسيرفر حالياً.";
+      }
+    }
+
+    async function pollWhatsAppMessagesNow() {
+      showToast("🔄 جاري سحب رسائل الواتساب من Green-API...");
+      try {
+        const resp = await fetch(`${API_BASE}/api/poll-whatsapp-now`, { method: "POST" });
+        if (resp.ok) {
+          const data = await resp.json();
+          await syncTicketsAndLogsFromServer();
+          showToast(data.note_ar || "✅ تم فحص وسحب رسائل الواتساب!");
+          return;
+        }
+      } catch (e) {}
+      showToast("⚠️ تأكد من إدخال مفاتيح Green-API أولاً.");
+    }
+
+    async function quickSimulateIncomingWhatsApp() {
+      const sampleText = "عندي زياتين في عقارب صفاقس عمرها 12 سنة لاحظت دوائر كحلة وصفراء على الورق وكأنه عين الطاووس، شنوة الدواء والجرعة؟";
+      try {
+        const resp = await fetch(`${API_BASE}/api/simulate-incoming-whatsapp`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            phone: "+21621127147",
+            farmer_name: "فلاح عبر واتساب",
+            message_text: sampleText
+          })
+        });
+        if (resp.ok) {
+          await syncTicketsAndLogsFromServer();
+          document.getElementById("tabBtnQueue")?.click();
+          showToast("📩 وصلت رسالة الفلاح إلى قسم الاستشارات وبانتظار مصادقتك!");
+          return;
+        }
+      } catch (e) {}
+      const newTid = "AGRI-" + Math.floor(100000 + Math.random() * 900000);
+      ticketsData.unshift({
+        id: newTid,
+        farmerName: "فلاح عبر واتساب",
+        phone: "+216 21 127 147",
+        region: "عقارب - صفاقس",
+        sector: "زياتين",
+        cropVariety: "الزياتين",
+        createdAt: "الآن",
+        status: "PENDING",
+        deliveryNote: "⏳ بانتظار مصادقتك",
+        farmerMessage: sampleText,
+        aiResponse: "مرحبا بيك — بخصوص **الزياتين** متاعك:\n• **المرض متاعك:** راهو الزياتين متاعك فيها **مرض عين الطاووس**.\n• **أعمل هذي:** فرّغ وسط الشجرة بالزبيرة.\n• **اشري هذي واستعملها لهذي:** اشري **سيليت 400 (دودين)** وحط **100 مل في 100 لتر ماء** (**20 مل في بومبا 20 لتر**) ورشّ بيه."
+      });
+      selectedTicketId = newTid;
+      updateKpis();
+      renderTicketsList();
+      renderTicketDetail();
+      showToast("📩 تمت إضافة استشارة تجريبية جديدة بانتظار مصادقتك!");
+    }
+
+    async function loadBotConfigFromServer() {
+      try {
+        const resp = await fetch(`${API_BASE}/api/whatsapp-config`);
+        if (!resp.ok) return;
+        const cfg = await resp.json();
+        updateApprovalModeButtons(Boolean(cfg.auto_reply_mode));
+        if (cfg.bot_reply_format && document.getElementById("selectBotReplyFormat")) {
+          document.getElementById("selectBotReplyFormat").value = cfg.bot_reply_format;
+        }
+        const gidInp = document.getElementById("waInputGreenId");
+        const gtokInp = document.getElementById("waInputGreenToken");
+        if (gidInp && cfg.green_api_instance_id && !gidInp.value) gidInp.value = cfg.green_api_instance_id;
+        if (gtokInp && cfg.green_api_token && !gtokInp.value) gtokInp.value = cfg.green_api_token;
+
+        const pill = document.getElementById("waLiveStatePill");
+        const detail = document.getElementById("waLiveDetailText");
+        const setupPanel = document.getElementById("waSetupCollapsible");
+        if (pill) {
+          if (cfg.has_green_api) {
+            const st = cfg.green_diagnostic?.state || "authorized";
+            if (st === "authorized") {
+              pill.className = "px-3 py-0.5 rounded-full text-xs font-black lux-gold-badge";
+              pill.textContent = `🟢 مربوط ونشط (Instance: ${cfg.green_api_instance_id})`;
+              if (detail) detail.textContent = cfg.green_diagnostic?.note_ar || "✅ يستقبل رسائل الواتساب ويحولها للاستشارات.";
+            } else {
+              pill.className = "px-3 py-0.5 rounded-full text-xs font-black bg-amber-500 text-slate-950";
+              pill.textContent = `🟠 حالة الحساب: ${st}`;
+              if (detail) detail.textContent = cfg.green_diagnostic?.note_ar || "تحقق من ربط الهاتف بـ QR Code في Green-API.";
+              if (setupPanel) setupPanel.classList.remove("hidden");
+            }
+          } else {
+            pill.className = "px-3 py-0.5 rounded-full text-xs font-black bg-rose-600 text-white";
+            pill.textContent = "⚠️ غير مربوط (أدخل idInstance و apiTokenInstance)";
+            if (detail) detail.textContent = "اضغط على «🔑 إعدادات / ربط Green-API» وأدخل المفاتيح لتفعيل استقبال الواتساب.";
+            if (setupPanel) setupPanel.classList.remove("hidden");
+          }
+        }
+      } catch (e) {}
+    }
+
+    async function syncTicketsAndLogsFromServer() {
+      let localChanged = syncTicketsFromSharedBrowserStorage();
+      try {
+        const [respTickets, respLogs, respMap] = await Promise.all([
+          fetch(`${API_BASE}/api/tickets`),
+          fetch(`${API_BASE}/api/logs`),
+          fetch(`${API_BASE}/api/farmers-map`)
+        ]);
+
+        if (respMap && respMap.ok) {
+          const mapJson = await respMap.json();
+          if (Array.isArray(mapJson.farmers) && mapJson.farmers.length > 0) {
+            farmersMapData = mapJson.farmers;
+            updateKpis();
+            renderFarmersDatabaseTable();
+            renderTunisiaMapMarkersAndList();
+          }
+        }
+
+        if (respLogs && respLogs.ok) {
+          const logData = await respLogs.json();
+          const logLine = document.getElementById("waLatestLogLine");
+          const checkTime = document.getElementById("waLastCheckTime");
+          if (logLine && Array.isArray(logData.logs) && logData.logs.length > 0) {
+            logLine.textContent = logData.logs[0];
+          }
+          if (checkTime && logData.bot_status?.last_check) {
+            checkTime.textContent = `آخر فحص: ${logData.bot_status.last_check}`;
+          }
+        }
+
+        if (respTickets && respTickets.ok) {
+          const serverList = await respTickets.json();
+          if (Array.isArray(serverList) && serverList.length > 0) {
+            let changed = false;
+            const chronological = [...serverList].reverse();
+            chronological.forEach(st => {
+              const existing = ticketsData.find(t => t.id === st.ticket_id);
+              if (!existing) {
+                ticketsData.unshift({
+                  id: st.ticket_id,
+                  farmerName: st.farmer_name,
+                  phone: st.farmer_chat_id,
+                  region: st.region,
+                  sector: st.sector || "خضروات",
+                  cropVariety: st.crop_variety,
+                  createdAt: st.created_at || "الآن",
+                  status: st.status || "PENDING",
+                  deliveryNote: st.delivery_note || "⏳ بانتظار مصادقتك",
+                  farmerMessage: st.farmer_message,
+                  aiResponse: st.ai_draft_response,
+                  imageUrl: st.image_url ? resolveMediaUrl(st.image_url) : null,
+                  audioUrl: st.audio_url ? resolveMediaUrl(st.audio_url) : null,
+                  audioRawUrl: st.audio_raw_url ? resolveMediaUrl(st.audio_raw_url) : null,
+                  lat: st.lat || 36.6806,
+                  lon: st.lon || 10.2892,
+                  isExactGps: Boolean(st.is_exact_gps)
+                });
+                selectedTicketId = st.ticket_id;
+                changed = true;
+              } else {
+                if (!existing.imageUrl && st.image_url) { existing.imageUrl = resolveMediaUrl(st.image_url); changed = true; }
+                if (!existing.audioUrl && st.audio_url) { existing.audioUrl = resolveMediaUrl(st.audio_url); changed = true; }
+              }
+            });
+            if (changed || localChanged) {
+              updateKpis();
+              renderTicketsList();
+              renderTicketDetail();
+              showToast("📩 وصلت رسالة جديدة من فلاح إلى قائمة الاستشارات!");
+              return;
+            }
+          }
+        }
+      } catch (e) {}
+
+      if (localChanged) {
+        updateKpis();
+        renderTicketsList();
+        renderTicketDetail();
+        showToast("📩 وصلت استشارة جديدة من بوابة الفلاح — بانتظار مصادقتك!");
+      }
+    }
+
     async function saveBotReplyFormat() {
       const fmt = document.getElementById("selectBotReplyFormat")?.value || "both";
       try {
@@ -1393,80 +1636,6 @@
       });
     }
 
-    function renderTicketDetail() {
-      const container = document.getElementById("ticketDetailCard");
-      const ticket = ticketsData.find(t => t.id === selectedTicketId);
-      if (!container || !ticket) return;
-
-      container.innerHTML = `
-        <div class="space-y-4">
-          <div class="flex flex-wrap items-start justify-between gap-2 border-b border-slate-700 pb-3">
-            <div>
-              <span class="text-xs font-mono bg-slate-900 px-2 py-0.5 rounded text-amber-300">${ticket.id}</span>
-              <h2 class="text-lg font-extrabold text-amber-300 mt-1">${ticket.farmerName} (${ticket.region})</h2>
-              <p class="text-xs text-emerald-200">${ticket.cropVariety} • هاتف الفلاح: <span dir="ltr" class="font-mono font-bold">${ticket.phone}</span></p>
-            </div>
-            <button type="button" onclick="focusFarmerOnMapFromTicket('${ticket.id}')" class="bg-sky-600 hover:bg-sky-500 text-white text-[11px] font-extrabold px-3 py-1.5 rounded-lg">
-              🗺️ عرض الضيعة على الخريطة
-            </button>
-          </div>
-
-          <div class="bg-slate-50 border border-amber-500/40 rounded-xl p-3.5 space-y-2">
-            <p class="text-xs font-bold text-amber-300">📩 سؤال الفلاح الوارد:</p>
-            <p class="text-xs leading-relaxed font-semibold">"${ticket.farmerMessage}"</p>
-          </div>
-
-          <div class="space-y-2">
-            <label for="editorAiResponse" class="block text-xs font-extrabold text-amber-300">✏️ راجع وعدّل التشخيص والوصفة قبل المصادقة والإرسال للفلاح:</label>
-            <textarea id="editorAiResponse" rows="8" class="w-full text-xs leading-relaxed rounded-xl p-3.5 font-medium">${ticket.aiResponse}</textarea>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-            <button id="btnApproveSendText" type="button" class="lux-gold-badge font-black text-xs py-3 px-4 rounded-xl shadow transition">
-              ✅ مصادقة وإرسال الإجابة للفلاح (بوابة الفلاح + واتساب)
-            </button>
-            <button id="btnApproveSendBoth" type="button" class="lux-emerald-btn font-extrabold text-xs py-3 px-4 rounded-xl shadow transition">
-              📝+🔊 مصادقة وإرسال نص + تسجيل صوتي
-            </button>
-          </div>
-        </div>
-      `;
-
-      async function handleApprove(mode) {
-        const updatedText = document.getElementById("editorAiResponse").value;
-        ticket.aiResponse = updatedText;
-        ticket.status = "APPROVED";
-        ticket.deliveryNote = "✅ تمت المصادقة والإرسال من المهندس";
-        updateSharedTicketStatusInBrowser(ticket.id, "APPROVED", updatedText, ticket.deliveryNote);
-        renderTicketsList();
-        showToast("⏳ جاري المصادقة وإرسال الإجابة المعتمدة للفلاح...");
-        try {
-          const resp = await fetch(`${API_BASE}/api/approve-and-send`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              ticket_id: ticket.id,
-              edited_response: updatedText,
-              to_phone: ticket.phone,
-              send_mode: mode
-            })
-          });
-          if (resp.ok) {
-            const data = await resp.json();
-            ticket.deliveryNote = data.note_ar || "✅ تمت المصادقة والإرسال";
-            updateSharedTicketStatusInBrowser(ticket.id, "APPROVED", updatedText, ticket.deliveryNote);
-            renderTicketsList();
-            showToast(data.note_ar || "✅ تمت المصادقة والإرسال بنجاح!");
-            return;
-          }
-        } catch (e) {}
-        showToast("✅ تمت المصادقة وحفظ الإجابة في بوابة الفلاح!");
-      }
-
-      document.getElementById("btnApproveSendText")?.addEventListener("click", () => handleApprove("text"));
-      document.getElementById("btnApproveSendBoth")?.addEventListener("click", () => handleApprove("both"));
-    }
-
     // ==================== الخريطة التفاعلية وقاعدة بيانات الفلاحين ====================
     function latLonToUtm(lat, lon) {
       lat = Number(lat) || 36.6806;
@@ -1790,6 +1959,54 @@
       const locality = document.getElementById("mapInputLocality")?.value.trim() || "مرناق - بن عروس";
       const cropAge = document.getElementById("mapInputCropAge")?.value.trim() || "طور الإنتاج";
       const latRaw = parseFloat(document.getElementById("mapInputLat")?.value || "36.6806");
+      const lonRaw = parseFloat(document.getElementById("mapInputLon")?.value || "10.2892");
+
+      const metrics = computeGeodesicPolygonMetrics(drawnPolygonPoints);
+      const hasPoly = drawnPolygonPoints.length >= 3;
+      const payload = {
+        farmer_name: farmerName,
+        phone: phone,
+        region: locality,
+        locality_name: locality,
+        crop_category: cropCategory,
+        crop_variety: cropVariety,
+        crop_age_label: cropAge,
+        lat: hasPoly ? metrics.cLat : latRaw,
+        lon: hasPoly ? metrics.cLon : lonRaw,
+        is_exact_gps: true,
+        polygon_points: hasPoly ? drawnPolygonPoints : null,
+        area_hectares: hasPoly ? Number(metrics.ha.toFixed(3)) : 2.0,
+        area_m2: hasPoly ? Math.round(metrics.m2) : 20000,
+        perimeter_m: hasPoly ? Math.round(metrics.perim) : 500
+      };
+
+      try {
+        const resp = await fetch(`${API_BASE}/api/farmers-map`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (Array.isArray(data.farmers)) farmersMapData = data.farmers;
+          clearAllMapMeasurements();
+          renderTunisiaMapMarkersAndList();
+          renderFarmersDatabaseTable();
+          showToast(`📍✅ تم حفظ ضيعة (${farmerName}) بنجاح!`);
+          return;
+        }
+      } catch (e) {}
+
+      farmersMapData.unshift({
+        farmer_id: "FARM-" + Math.floor(1000 + Math.random() * 9000),
+        ...payload
+      });
+      clearAllMapMeasurements();
+      renderTunisiaMapMarkersAndList();
+      renderFarmersDatabaseTable();
+      showToast(`📍✅ تم حفظ ضيعة (${farmerName}) على الخريطة!`);
+    }
+
     function updateSharedTicketStatusInBrowser(ticketId, statusStr, approvedText, deliveryNoteStr, voiceUrl = null) {
       try {
         let sharedList = JSON.parse(localStorage.getItem("agri_shared_tickets_db") || "[]");
@@ -1958,6 +2175,10 @@
         btn.addEventListener("click", () => {
           currentSectorFilter = btn.getAttribute("data-sector");
           renderTicketsList();
+          renderTicketDetail();
+        });
+      });
+
       const zeinebAud = document.getElementById("zeinebRefAudioPlayer");
       if (zeinebAud) {
         zeinebAud.src = `${API_BASE}/media/zeineb_lazizi_voice_ref.wav`;
