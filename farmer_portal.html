@@ -10,38 +10,38 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <style>
     :root {
-      --royal-bg-deep: #021811;
-      --royal-panel: #063527;
-      --gold-bright: #fde047;
+      --olive-bg-light: #eef4e6;
+      --olive-panel: #f7faf3;
+      --olive-header: #486836;
       --gold-main: #f59e0b;
       --gold-metallic: #d4af37;
-      --ivory-text: #fefce8;
+      --text-dark-olive: #1d2e14;
     }
     body {
       font-family: 'Cairo', sans-serif;
-      background-color: #021811 !important;
+      background-color: #eef4e6 !important;
       background-image:
-        radial-gradient(circle at 15% 15%, rgba(212, 175, 55, 0.14) 0%, transparent 45%),
-        radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.12) 0%, transparent 45%),
-        linear-gradient(160deg, #021610 0%, #052c20 50%, #021811 100%) !important;
-      color: #fefce8 !important;
+        radial-gradient(circle at 15% 15%, rgba(122, 160, 95, 0.18) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(212, 175, 55, 0.12) 0%, transparent 45%),
+        linear-gradient(160deg, #f3f8ed 0%, #e3eed7 50%, #ebf3e1 100%) !important;
+      color: #1d2e14 !important;
     }
     .farmer-portal-header {
-      background: linear-gradient(135deg, #01140e 0%, #052e22 55%, #083c2d 100%) !important;
-      border-bottom: 2.5px solid #d4af37 !important;
-      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65) !important;
+      background: linear-gradient(135deg, #3b582b 0%, #4e713b 55%, #5c8246 100%) !important;
+      border-bottom: 3px solid #d4af37 !important;
+      box-shadow: 0 6px 20px rgba(53, 79, 39, 0.28) !important;
     }
     .gold-badge, .lux-gold-btn {
-      background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #b45309 100%) !important;
-      color: #021811 !important;
+      background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #d97706 100%) !important;
+      color: #1d2e14 !important;
       border: 1px solid #fef9c3 !important;
-      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35) !important;
+      box-shadow: 0 3px 10px rgba(217, 119, 6, 0.25) !important;
     }
     main .bg-white {
-      background: linear-gradient(145deg, #063527 0%, #04241a 100%) !important;
-      border: 1.5px solid rgba(212, 175, 55, 0.45) !important;
-      box-shadow: 0 10px 28px -6px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(253, 230, 138, 0.18) !important;
-      color: #fefce8 !important;
+      background: linear-gradient(145deg, #fafcf7 0%, #edf4e5 100%) !important;
+      border: 1.5px solid #95b280 !important;
+      box-shadow: 0 6px 18px -4px rgba(58, 85, 42, 0.14) !important;
+      color: #1d2e14 !important;
     }
     main .bg-slate-50,
     main .bg-slate-100,
@@ -50,16 +50,16 @@
     main .bg-sky-50,
     main .bg-amber-50,
     main .bg-amber-50\/80 {
-      background: rgba(2, 24, 17, 0.78) !important;
-      border-color: rgba(212, 175, 55, 0.38) !important;
-      color: #fefce8 !important;
+      background: #e4eed9 !important;
+      border-color: #8ba876 !important;
+      color: #1d2e14 !important;
     }
     main .text-slate-900,
     main .text-slate-800,
     main .text-emerald-950,
     main .text-sky-950,
     main .text-amber-950 {
-      color: #fde68a !important;
+      color: #233819 !important;
     }
     main .text-slate-700,
     main .text-slate-600,
@@ -67,29 +67,29 @@
     main .text-emerald-800,
     main .text-sky-800,
     main .text-amber-800 {
-      color: #a7f3d0 !important;
+      color: #3b582b !important;
     }
     main .border-slate-200,
     main .border-slate-300,
     main .border-slate-100 {
-      border-color: rgba(212, 175, 55, 0.35) !important;
+      border-color: #95b280 !important;
     }
     main input:not([type="file"]),
     main select,
     main textarea {
-      background-color: #021811 !important;
-      border: 1.5px solid rgba(212, 175, 55, 0.55) !important;
-      color: #fefce8 !important;
+      background-color: #ffffff !important;
+      border: 1.5px solid #7c9c67 !important;
+      color: #1d2e14 !important;
     }
     main input::placeholder,
     main textarea::placeholder {
-      color: rgba(167, 243, 208, 0.55) !important;
+      color: #6c875a !important;
     }
     main input:focus,
     main select:focus,
     main textarea:focus {
-      border-color: #fde047 !important;
-      box-shadow: 0 0 0 2px rgba(253, 224, 71, 0.25) !important;
+      border-color: #486836 !important;
+      box-shadow: 0 0 0 2px rgba(72, 104, 54, 0.25) !important;
     }
     .parcel-vertex-dot {
       width: 22px;
@@ -415,8 +415,41 @@
             </select>
           </div>
           <div>
-            <label class="block text-xs font-extrabold text-slate-800 mb-1">📸 إرفاق صورة للورقة أو الثمرة (اختياري)</label>
-            <input id="consultPhotoInput" type="file" accept="image/*" class="w-full rounded-xl px-2.5 py-1.5 text-xs bg-slate-50 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-700 file:text-white" />
+            <label class="block text-xs font-extrabold text-slate-800 mb-1">📸 إرفاق صورة للورقة أو الثمرة (تظهر مباشرة عند المهندس)</label>
+            <input id="consultPhotoInput" type="file" accept="image/*" onchange="onFarmerPhotoSelected(event)" class="w-full rounded-xl px-2.5 py-1.5 text-xs bg-slate-50 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-700 file:text-white" />
+            <div id="farmerPhotoPreviewBox" class="hidden mt-2 bg-slate-50 border border-slate-300 rounded-xl p-2 flex items-center justify-between gap-2">
+              <img id="farmerPhotoPreviewImg" src="" alt="معاينة الصورة" class="h-16 w-auto rounded-lg object-cover border" />
+              <button type="button" onclick="clearFarmerPhotoAttachment()" class="text-[11px] font-bold text-rose-700 px-2 py-1 rounded bg-rose-100">✖ حذف الصورة</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- تسجيل أو إرفاق رسالة صوتية من الفلاح للمهندس -->
+        <div class="bg-slate-50 border border-slate-300 rounded-2xl p-3.5 space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-extrabold text-slate-900">🎙️ إرسال تسجيل صوتي للمهندس (اختياري):</span>
+              <p class="text-[11px] text-slate-600">سجّل سؤالك بصوتك بالدارجة أو ارفع ملفاً صوتياً ليسمعه المهندس مباشرة</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" id="btnFarmerStartRec" onclick="startFarmerVoiceRecording()" class="bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs px-3.5 py-1.5 rounded-xl shadow-sm transition">
+                🔴 سجّل سؤالك بالصوت
+              </button>
+              <button type="button" id="btnFarmerStopRec" onclick="stopFarmerVoiceRecording()" class="hidden bg-slate-900 text-white font-extrabold text-xs px-3.5 py-1.5 rounded-xl shadow-sm transition">
+                ⏹️ إيقاف التسجيل
+              </button>
+              <label class="cursor-pointer bg-white border border-slate-300 px-3 py-1.5 rounded-xl text-xs font-bold">
+                <span>📂 أو إرفاق ملف صوتي</span>
+                <input id="consultAudioFileInput" type="file" accept="audio/*" onchange="onFarmerAudioFileSelected(event)" class="hidden" />
+              </label>
+            </div>
+          </div>
+          <div id="farmerRecStatus" class="hidden text-xs font-extrabold text-rose-700 animate-pulse">
+            🎙️ جاري التسجيل الصوتي... تكلم الآن ثم اضغط «⏹️ إيقاف التسجيل»
+          </div>
+          <div id="farmerAudioPreviewBox" class="hidden bg-white border border-slate-300 rounded-xl p-2.5 flex flex-wrap items-center justify-between gap-2">
+            <audio id="farmerAudioPreviewPlayer" controls class="h-9 flex-1"></audio>
+            <button type="button" onclick="clearFarmerAudioAttachment()" class="text-[11px] font-bold text-rose-700 px-2.5 py-1 rounded bg-rose-100">✖ حذف الصوت</button>
           </div>
         </div>
 
@@ -437,22 +470,25 @@
       </div>
 
       <!-- صندوق تأكيد إرسال الاستشارة للمهندس ومتابعة حالة الرد -->
-      <div id="instantDiagnosisCard" class="hidden bg-emerald-950 text-white rounded-3xl p-5 md:p-6 shadow-xl border-2 border-amber-400/70 space-y-3">
+      <div id="instantDiagnosisCard" class="hidden bg-[#354f27] text-white rounded-3xl p-5 md:p-6 shadow-xl border-2 border-[#d4af37] space-y-3">
         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-emerald-800 pb-3">
           <div class="flex items-center gap-2">
             <span class="text-xl" id="instantDiagIcon">📨</span>
             <h3 class="text-base font-extrabold text-amber-300" id="instantDiagTitle">حالة استشارتك لدى مكتب المهندس الفلاحي:</h3>
           </div>
-          <span id="instantDiagStatusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-500 text-slate-950">
+          <span id="instantDiagStatusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-amber-400 text-slate-950">
             ⏳ بانتظار مراجعة ومصادقة المهندس
           </span>
         </div>
-        <div id="instantDiagnosisBody" class="text-xs leading-relaxed text-emerald-50 whitespace-pre-line font-medium bg-slate-900/60 p-4 rounded-2xl border border-emerald-800/80">
+        <div id="instantDiagnosisBody" class="text-xs leading-relaxed text-white whitespace-pre-line font-medium bg-[#233819] p-4 rounded-2xl border border-[#8ba876]">
+        </div>
+        <div id="instantDiagnosisVoiceBox" class="hidden bg-[#233819] p-3 rounded-2xl border border-amber-400 space-y-1.5">
+          <span class="text-xs font-extrabold text-amber-300 block">🔊 استمع للرد الصوتي المعتمد من مكتب المهندسة زينب العزيزي:</span>
+          <audio id="instantDiagnosisAudioPlayer" controls class="w-full h-10"></audio>
         </div>
         <div class="text-[11px] text-amber-200 flex flex-wrap items-center justify-between gap-2 pt-1">
-          <span>✅ وصلت رسالتك إلى لوحة المهندس (قسم الاستشارات)؛ وعند مصادقة المهندس ستظهر الإجابة النهائية هنا وفي سجل ضيعاتك.</span>
+          <span>✅ وصلت رسالتك (مع المرفقات) إلى لوحة المهندس؛ وعند مصادقة المهندس ستظهر الإجابة النهائية هنا وفي سجل ضيعاتك.</span>
           <div class="flex items-center gap-2">
-            <a href="engineer_dashboard.html" class="px-3 py-1 rounded-lg font-black gold-badge text-slate-950">👨‍🔬 فتح صفحة المهندس للمصادقة</a>
             <button type="button" onclick="switchFarmerTab('history')" class="text-white underline font-bold">
               عرض سجل ضيعاتي ⬅️
             </button>
@@ -521,6 +557,111 @@
     let drawnMarkers = [];
     let drawnPolygon = null;
     let drawnPerimeterLine = null;
+
+    // متغيرات المرفقات (صورة + تسجيل صوتي) من الفلاح
+    let attachedFarmerPhotoBase64 = null;
+    let attachedFarmerPhotoMime = "image/jpeg";
+    let attachedFarmerAudioBase64 = null;
+    let attachedFarmerAudioMime = "audio/webm";
+    let farmerMediaRecorder = null;
+    let farmerAudioChunks = [];
+
+    function onFarmerPhotoSelected(evt) {
+      const file = evt.target.files && evt.target.files[0];
+      if (!file) return;
+      attachedFarmerPhotoMime = file.type || "image/jpeg";
+      const reader = new FileReader();
+      reader.onload = () => {
+        attachedFarmerPhotoBase64 = reader.result;
+        const box = document.getElementById("farmerPhotoPreviewBox");
+        const img = document.getElementById("farmerPhotoPreviewImg");
+        if (box && img) {
+          img.src = attachedFarmerPhotoBase64;
+          box.classList.remove("hidden");
+        }
+        showFarmerToast("📸 تم إرفاق الصورة بنجاح — ستظهر عند المهندس!");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearFarmerPhotoAttachment() {
+      attachedFarmerPhotoBase64 = null;
+      const inp = document.getElementById("consultPhotoInput");
+      if (inp) inp.value = "";
+      document.getElementById("farmerPhotoPreviewBox")?.classList.add("hidden");
+    }
+
+    function onFarmerAudioFileSelected(evt) {
+      const file = evt.target.files && evt.target.files[0];
+      if (!file) return;
+      attachedFarmerAudioMime = file.type || "audio/ogg";
+      const reader = new FileReader();
+      reader.onload = () => {
+        attachedFarmerAudioBase64 = reader.result;
+        const box = document.getElementById("farmerAudioPreviewBox");
+        const player = document.getElementById("farmerAudioPreviewPlayer");
+        if (box && player) {
+          player.src = attachedFarmerAudioBase64;
+          box.classList.remove("hidden");
+        }
+        showFarmerToast("🎙️ تم إرفاق الملف الصوتي بنجاح!");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function startFarmerVoiceRecording() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showFarmerToast("⚠️ متصفحك لا يدعم التسجيل الصوتي المباشر؛ يمكنك إرفاق ملف صوتي.");
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        farmerAudioChunks = [];
+        farmerMediaRecorder = new MediaRecorder(stream);
+        attachedFarmerAudioMime = farmerMediaRecorder.mimeType || "audio/webm";
+        farmerMediaRecorder.ondataavailable = (e) => {
+          if (e.data && e.data.size > 0) farmerAudioChunks.push(e.data);
+        };
+        farmerMediaRecorder.onstop = () => {
+          stream.getTracks().forEach(t => t.stop());
+          const blob = new Blob(farmerAudioChunks, { type: attachedFarmerAudioMime });
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            attachedFarmerAudioBase64 = reader.result;
+            const box = document.getElementById("farmerAudioPreviewBox");
+            const player = document.getElementById("farmerAudioPreviewPlayer");
+            if (box && player) {
+              player.src = attachedFarmerAudioBase64;
+              box.classList.remove("hidden");
+            }
+            showFarmerToast("🎙️ تم تسجيل رسالتك الصوتية بنجاح!");
+          };
+          reader.readAsDataURL(blob);
+        };
+        farmerMediaRecorder.start();
+        document.getElementById("btnFarmerStartRec")?.classList.add("hidden");
+        document.getElementById("btnFarmerStopRec")?.classList.remove("hidden");
+        document.getElementById("farmerRecStatus")?.classList.remove("hidden");
+      } catch (e) {
+        showFarmerToast("⚠️ يرجى السماح للمتصفح باستعمال الميكروفون!");
+      }
+    }
+
+    function stopFarmerVoiceRecording() {
+      if (farmerMediaRecorder && farmerMediaRecorder.state !== "inactive") {
+        farmerMediaRecorder.stop();
+      }
+      document.getElementById("btnFarmerStopRec")?.classList.add("hidden");
+      document.getElementById("btnFarmerStartRec")?.classList.remove("hidden");
+      document.getElementById("farmerRecStatus")?.classList.add("hidden");
+    }
+
+    function clearFarmerAudioAttachment() {
+      attachedFarmerAudioBase64 = null;
+      const inp = document.getElementById("consultAudioFileInput");
+      if (inp) inp.value = "";
+      document.getElementById("farmerAudioPreviewBox")?.classList.add("hidden");
+    }
 
     function showFarmerToast(msg) {
       const toast = document.getElementById("farmerToast");
@@ -921,11 +1062,14 @@
       const soil = document.getElementById("farmerSoilType")?.value || "طينية كلسية";
       const water = (document.getElementById("farmerWaterInfo")?.value || "").trim() || "بئر 1.5 غ/ل";
       const irri = document.getElementById("farmerIrrigationSystem")?.value || "قطرة قطرة";
-      const msg = (document.getElementById("consultMessageInput")?.value || "").trim();
+      let msg = (document.getElementById("consultMessageInput")?.value || "").trim();
 
-      if (!msg) {
-        showFarmerToast("⚠️ اكتب استفسارك أو شنوة لاحظت في ضيعتك قبل الإرسال!");
+      if (!msg && !attachedFarmerPhotoBase64 && !attachedFarmerAudioBase64) {
+        showFarmerToast("⚠️ اكتب استفسارك أو أرفق صورة / تسجيلاً صوتياً قبل الإرسال!");
         return;
+      }
+      if (!msg) {
+        msg = attachedFarmerAudioBase64 ? "🎙️ تسجيل صوتي مرفق من الفلاح" : "📸 صورة مرفقة من الفلاح للفحص";
       }
 
       const metrics = computePolygonMetrics(drawnPoints);
@@ -944,6 +1088,8 @@
 
       let aiDraftForEngineer = generateInstantDerjaDiagnosis(cropVariety, msg, sector, farmerName);
       let ticketId = "AGRI-" + Math.floor(100000 + Math.random() * 900000);
+      let serverImgUrl = attachedFarmerPhotoBase64;
+      let serverAudUrl = attachedFarmerAudioBase64;
       const farmId = "FARM-" + Math.floor(1000 + Math.random() * 9000);
       const nowTimeStr = new Date().toLocaleTimeString("ar-TN", { hour: "2-digit", minute: "2-digit" });
 
@@ -951,7 +1097,7 @@
       const diagBody = document.getElementById("instantDiagnosisBody");
       const diagBadge = document.getElementById("instantDiagStatusBadge");
       if (diagCard && diagBody) {
-        diagBody.textContent = "⏳ جاري إرسال رسالتك ومعطيات ضيعتك إلى صفحة المهندس الفلاحي...";
+        diagBody.textContent = "⏳ جاري إرسال رسالتك ومرفقاتك إلى صفحة المهندس الفلاحي...";
         diagCard.classList.remove("hidden");
       }
 
@@ -970,6 +1116,10 @@
               area_hectares: metrics.ha > 0 ? metrics.ha : areaHa
             },
             message_text: msg,
+            image_base64: attachedFarmerPhotoBase64,
+            image_mime: attachedFarmerPhotoMime,
+            audio_base64: attachedFarmerAudioBase64,
+            audio_mime: attachedFarmerAudioMime,
             gps_lat: centerLat,
             gps_lon: centerLon
           })
@@ -980,6 +1130,8 @@
           if (qData.final_message_to_farmer) {
             aiDraftForEngineer = qData.final_message_to_farmer;
           }
+          if (qData.ticket?.image_url) serverImgUrl = qData.ticket.image_url;
+          if (qData.ticket?.audio_url) serverAudUrl = qData.ticket.audio_url;
         }
       } catch (e) {}
 
@@ -1007,6 +1159,10 @@
         farmer_message: msg,
         aiResponse: aiDraftForEngineer,
         ai_draft_response: aiDraftForEngineer,
+        imageUrl: serverImgUrl,
+        image_url: serverImgUrl,
+        audioUrl: serverAudUrl,
+        audio_url: serverAudUrl,
         lat: centerLat,
         lon: centerLon,
         isExactGps: drawnPoints.length >= 3,
@@ -1151,20 +1307,28 @@
           );
           if (matchT && (matchT.status === "APPROVED" || matchT.status === "AUTO_REPLIED")) {
             const approvedText = matchT.aiResponse || matchT.ai_draft_response || "";
-            if (approvedText && (f.ai_response !== approvedText || f.consultation_status !== "APPROVED")) {
+            const approvedVoice = matchT.botVoiceUrl || matchT.bot_voice_url || null;
+            if (approvedText && (f.ai_response !== approvedText || f.consultation_status !== "APPROVED" || (approvedVoice && f.bot_voice_url !== approvedVoice))) {
               f.ai_response = approvedText;
               f.consultation_status = "APPROVED";
+              if (approvedVoice) f.bot_voice_url = approvedVoice;
               updatedAny = true;
 
               const diagCard = document.getElementById("instantDiagnosisCard");
               const diagBody = document.getElementById("instantDiagnosisBody");
               const diagBadge = document.getElementById("instantDiagStatusBadge");
+              const voiceBox = document.getElementById("instantDiagnosisVoiceBox");
+              const voicePlayer = document.getElementById("instantDiagnosisAudioPlayer");
               if (diagCard && diagBody && !diagCard.classList.contains("hidden")) {
                 if (diagBadge) {
                   diagBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-400 text-slate-950";
                   diagBadge.textContent = "✅ تمت المصادقة والرد من المهندس الفلاحي";
                 }
                 diagBody.textContent = approvedText;
+                if (approvedVoice && voiceBox && voicePlayer) {
+                  voicePlayer.src = approvedVoice.startsWith("/") ? (API_BASE + approvedVoice) : approvedVoice;
+                  voiceBox.classList.remove("hidden");
+                }
               }
             }
           }
