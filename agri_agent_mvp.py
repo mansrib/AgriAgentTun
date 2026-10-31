@@ -2295,6 +2295,37 @@ def process_incoming_farmer_message(query: FarmerQuery, send_on_whatsapp: bool =
         else:
             aud_url_val = aud_raw_url_val
         m_type_val = "audio" if not img_url_val else "image_and_audio"
+
+    f_lat = float(intent_obj.get("lat", 36.6806))
+    f_lon = float(intent_obj.get("lon", 10.2892))
+    f_exact_gps = bool(intent_obj.get("is_exact_gps", False))
+    f_locality = str(intent_obj.get("locality_name") or query.plot.region)
+    f_area_ha = float(intent_obj.get("area_hectares") or query.plot.area_hectares or 1.5)
+
+    upsert_farmer_on_map(
+        farmer_name=query.plot.farmer_name,
+        phone=query.plot.phone_or_chat_id,
+        region=query.plot.region,
+        locality_name=f_locality,
+        lat=f_lat,
+        lon=f_lon,
+        is_exact_gps=f_exact_gps,
+        crop_category=query.plot.crop_category,
+        crop_variety=query.plot.crop_variety,
+        crop_age_label=query.plot.growth_stage,
+        area_hectares=f_area_ha,
+        last_inquiry=query.message_text
+    )
+
+    item = PendingApprovalItem(
+        ticket_id=ticket_id,
+        created_at=datetime.now().strftime("%H:%M:%S"),
+        farmer_name=query.plot.farmer_name,
+        farmer_chat_id=query.plot.phone_or_chat_id,
+        region=query.plot.region,
+        sector=query.plot.crop_category,
+        crop_variety=query.plot.crop_variety,
+        water_ec=query.plot.water_salinity_ec,
         max_ec=guide["max_ec_dsm"],
         temp_c=w.max_temp_c,
         et0_mm=w.et0_fao_mm,
